@@ -11,7 +11,12 @@ The project is compiled with CMake version >= 3.8.
 * The executable will be found in `out/build/`.
 
 ### Linux
-W.I.P.
+```
+mkdir build && cd build
+cmake ..
+make
+```
+* The executable will be found in `build/`.
 
 ## Usage
 None so far.

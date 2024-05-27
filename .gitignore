@@ -1,4 +1,5 @@
 # Build Dir
+build/
 out/
 
 # IDE
