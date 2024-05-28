@@ -6,17 +6,20 @@
 set(PROJECT_NAME "Graphics")
 set(TARGET_GPU "NVIDIA")
 set(CXX_STD 20)
+set(MSAA_X 2)
 
 set(HEADERS 
 	lib/include
 	include/
-	include/shaders
+	include/render
+	include/objects
 )
 
 file(GLOB SOURCES
 	lib/include/GL/gl3w.c
 	src/*.cpp
-	src/shaders/*.cpp
+	src/render/*.cpp
+	src/objects/*.cpp
 )
 
 ##############################
@@ -53,5 +56,8 @@ target_link_libraries(${PROJECT_NAME} glm::glm)
 # Select NONE|NVIDIA|AMD depending on the system's discrete GPU.
 add_compile_definitions(${TARGET_GPU})
 
-# Add shader directory defintion
-add_compile_definitions(SHADER_DIR="${CMAKE_SOURCE_DIR}/src/shaders/")
+# Add shader directory definition
+add_compile_definitions(SHADER_DIR="${CMAKE_SOURCE_DIR}/shaders/")
+
+# Add anti-aliasing definition
+add_compile_definitions(MULTISAMPLE_NUM=${MSAA_X})

@@ -1,5 +1,10 @@
 #include "render.h"
 
+void Renderer::sizeCallback(GLFWwindow* window, int w, int h) {
+    gWindowWidth = w;
+    gWindowHeight = h;
+}
+
 GLFWwindow* Renderer::initWindow() {
     GLFWwindow* window;
 
@@ -8,6 +13,7 @@ GLFWwindow* Renderer::initWindow() {
         fprintf(stderr, "Failed to initialize GLFW.");
         exit(1);
     }
+    glfwWindowHint(GLFW_SAMPLES, MULTISAMPLE_NUM);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -25,6 +31,17 @@ GLFWwindow* Renderer::initWindow() {
         fprintf(stderr, "Failed to load OpenGL API definitions with GL3W.");
         exit(1);
     }
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(Renderer::debugMessageCallback, 0);
 
     return window;
+}
+
+void Renderer::clearColour(float r, float g, float b, float a) {
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Renderer::renderScene() {
+
 }

@@ -67,3 +67,23 @@ Shader::Shader(std::string vsFilename, std::string fsFilename) {
 void Shader::use() {
     glUseProgram(mProgramID);
 }
+
+void Shader::setInt(const std::string& name, GLint value) {
+    glUniform1i(glGetUniformLocation(mProgramID, name.c_str()), value);
+}
+
+void Shader::setFloat(const std::string& name, GLfloat value) {
+    glUniform1f(glGetUniformLocation(mProgramID, name.c_str()), value);
+}
+
+void Shader::setBool(const std::string& name, GLboolean value) {
+    glUniform1i(glGetUniformLocation(mProgramID, name.c_str()), value);
+}
+
+void Shader::setMat3(const std::string& name, glm::mat3 value) {
+    glUniformMatrix3fv(glGetUniformLocation(mProgramID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::setMat4(const std::string& name, glm::mat4 value) {
+    glUniformMatrix4fv(glGetUniformLocation(mProgramID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
