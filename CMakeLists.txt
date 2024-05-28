@@ -3,16 +3,20 @@
 ##############################
 #      PROJECT SETTINGS      #
 ##############################
+# Main Settings
 set(PROJECT_NAME "Graphics")
 set(TARGET_GPU "NVIDIA")
-set(CXX_STD 20)
+set(DEFAULT_WINDOW_WIDTH 640)
+set(DEFAULT_WINDOW_HEIGHT 480)
 set(MSAA_X 2)
 
+# File Settings
 set(HEADERS 
 	lib/include
 	include/
 	include/render
 	include/objects
+	include/input
 )
 
 file(GLOB SOURCES
@@ -20,7 +24,12 @@ file(GLOB SOURCES
 	src/*.cpp
 	src/render/*.cpp
 	src/objects/*.cpp
+	src/input/*.cpp
 )
+
+# Debug Settings
+set(DEBUG_GL 1)
+set(DEBUG_CAMERA 1)
 
 ##############################
 #         CMAKE WORK         #
@@ -37,7 +46,7 @@ project (${PROJECT_NAME})
 # Add source files
 add_executable (${PROJECT_NAME} ${SOURCES})
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET Graphics PROPERTY CXX_STANDARD ${CXX_STD})
+  set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 endif()
 
 # Include project headers
@@ -61,3 +70,11 @@ add_compile_definitions(SHADER_DIR="${CMAKE_SOURCE_DIR}/shaders/")
 
 # Add anti-aliasing definition
 add_compile_definitions(MULTISAMPLE_NUM=${MSAA_X})
+
+# Add dimension definitions
+add_compile_definitions(WINDOW_WIDTH=${DEFAULT_WINDOW_WIDTH})
+add_compile_definitions(WINDOW_HEIGHT=${DEFAULT_WINDOW_HEIGHT})
+
+# Add debug definitions
+add_compile_definitions(DEBUG_CAMERA=${DEBUG_CAMERA})
+add_compile_definitions(DEBUG_GL=${DEBUG_GL})

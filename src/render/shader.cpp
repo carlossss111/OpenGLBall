@@ -64,8 +64,12 @@ Shader::Shader(std::string vsFilename, std::string fsFilename) {
     glDeleteShader(fragmentShader);
 }
 
-void Shader::use() {
+void Shader::use() const {
     glUseProgram(mProgramID);
+}
+
+GLuint Shader::getHandle() const {
+    return mProgramID;
 }
 
 void Shader::setInt(const std::string& name, GLint value) {

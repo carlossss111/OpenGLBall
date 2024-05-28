@@ -10,13 +10,17 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "error.h"
+#include "shader.h"
+#include "camera.h"
+
+#include "cube.h"
 
 namespace Renderer {
-	static int gWindowWidth = 640, gWindowHeight = 480;
-
-	void renderScene();
+	static int gWindowWidth = WINDOW_WIDTH;
+	static int gWindowHeight = WINDOW_HEIGHT;
 
 	void sizeCallback(GLFWwindow* window, int w, int h);
 	GLFWwindow* initWindow();
-	void clearColour(float r, float g, float b, float a);
+	void initAll();
+	void renderScene(Shader* shader, const Camera& camera, const Cube& cube);
 }

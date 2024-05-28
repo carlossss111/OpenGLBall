@@ -17,7 +17,9 @@ private:
 public:
 	Shader(std::string vsFilename, std::string fsFilename);
 
-	void use();
+	void use() const;
+
+	GLuint getHandle() const;
 
 	void setInt(const std::string &name, GLint value);
 	void setFloat(const std::string &name, GLfloat value);

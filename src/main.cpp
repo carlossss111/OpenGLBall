@@ -3,17 +3,17 @@
 int main() {
     // GLFW Init
     GLFWwindow* window = Renderer::initWindow();
+    Renderer::initAll();
 
-    // Shader Init
+    // Init Classes
     Shader shader("triangle.vert", "triangle.frag");
-
-    // Objects
+    Camera camera;
     Cube cube;
    
     // Render Loop
     while (!glfwWindowShouldClose(window)) {
-        Renderer::clearColour(0.2f, 0.3f, 0.3f, 1.0f);
-        cube.draw(shader);
+        Renderer::renderScene(&shader, camera, cube);
+        Input::processKeyboard(window, &camera);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
