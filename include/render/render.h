@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <list>
 
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
@@ -13,7 +14,7 @@
 #include "shader.h"
 #include "camera.h"
 
-#include "model.h"
+#include "abstract_model.h"
 
 namespace Renderer {
 	static int gWindowWidth = WINDOW_WIDTH;
@@ -22,5 +23,5 @@ namespace Renderer {
 	void sizeCallback(GLFWwindow* window, int w, int h);
 	GLFWwindow* initWindow();
 	void initAll();
-	void renderScene(Shader* shader, const Camera& camera, const Model& model);
+	void renderScene(Shader* shader, const Camera& camera, const std::list<AbstractModel*>& modelList);
 }

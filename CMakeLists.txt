@@ -16,6 +16,8 @@ set(HEADERS
 	include/
 	include/render
 	include/objects
+	include/objects/procedural
+	include/objects/loaded
 	include/input
 )
 
@@ -24,6 +26,8 @@ file(GLOB SOURCES
 	src/*.cpp
 	src/render/*.cpp
 	src/objects/*.cpp
+	src/objects/procedural/*.cpp
+	src/objects/loaded/*.cpp
 	src/input/*.cpp
 )
 

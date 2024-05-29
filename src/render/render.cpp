@@ -46,7 +46,7 @@ void Renderer::initAll() {
     glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::renderScene(Shader* shader, const Camera& camera, const Model& modelObj) {
+void Renderer::renderScene(Shader* shader, const Camera& camera, const std::list<AbstractModel*>& modelList) {
     shader->use();
 
     // Handle depth etc
@@ -74,5 +74,7 @@ void Renderer::renderScene(Shader* shader, const Camera& camera, const Model& mo
     shader->setMat4("projection", projection);
 
     // Draw Objects
-    modelObj.draw(shader);
+    for (auto it = modelList.begin(); it != modelList.end(); ++it) {
+        (*it)->draw(shader);
+    }
 }
