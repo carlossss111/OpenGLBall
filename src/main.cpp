@@ -7,8 +7,8 @@ int main() {
 
     // Init Classes
     Shader shader("triangle.vert", "triangle.frag");
-    Camera camera;
-    Cube cube;
+    Camera camera(glm::vec3(0, 0, 0), glm::vec2(45.f, 20.f));
+    Cube cube(0.f, 0.f, 0.f);
    
     // Render Loop
     while (!glfwWindowShouldClose(window)) {

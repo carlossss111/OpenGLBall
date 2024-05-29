@@ -3,6 +3,7 @@
 void Renderer::sizeCallback(GLFWwindow* window, int w, int h) {
     gWindowWidth = w;
     gWindowHeight = h;
+    glViewport(0, 0, w, h);
 }
 
 GLFWwindow* Renderer::initWindow() {
@@ -56,7 +57,6 @@ void Renderer::renderScene(Shader* shader, const Camera& camera, const Cube& cub
 
     // View Matrix
     glm::mat4 view = glm::mat4(1.f);
-    view = glm::translate(view, -glm::vec3(0.f, 0.f, 0.f));
     view = glm::lookAt(
         camera.getPosition(), 
         camera.getPosition() + camera.getFront(), 

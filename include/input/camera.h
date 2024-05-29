@@ -19,6 +19,7 @@ private:
 
 public:
 	Camera();
+	Camera(glm::vec3 target, glm::vec2 rotation);
 
 	void setDistance(float dist);
 	void addDistance(float dist);
@@ -27,7 +28,7 @@ public:
 	glm::vec3 getPosition() const;
 	glm::vec3 getUp() const;
 
-	void moveAndOrientCamera(glm::vec3 target, glm::vec2 rot_offset);
+	void moveAndOrientCamera(glm::vec3 target, glm::vec2 rotOffset);
 
-	const void debug_camera();
+	void debugCamera() const;
 };

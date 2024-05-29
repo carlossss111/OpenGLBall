@@ -11,7 +11,12 @@ Camera::Camera() :
 	mPitch(0.f),
 	mMovementSpeed(1.f),
 	mMouseSensitivity(1.f),
-	mCamDist(3.f) {};
+	mCamDist(5.f) {};
+
+// Init at position
+Camera::Camera(glm::vec3 target, glm::vec2 rotation) : Camera() {
+	moveAndOrientCamera(target, rotation);
+}
 
 // Getters and Setters
 void Camera::setDistance(float dist) {
@@ -38,9 +43,9 @@ glm::vec3 Camera::getUp() const {
 
 // Model Viewer Movement
 // Rotates around a centre point
-void Camera::moveAndOrientCamera(glm::vec3 target, glm::vec2 rot_offset) {
-	mYaw -= -rot_offset.x * mMovementSpeed;
-	mPitch -= -rot_offset.y * mMovementSpeed;
+void Camera::moveAndOrientCamera(glm::vec3 target, glm::vec2 rotOffset) {
+	mYaw -= -rotOffset.x * mMovementSpeed;
+	mPitch -= -rotOffset.y * mMovementSpeed;
 
 	if (mPitch > 89.0f) {
 		mPitch = 89.0f;
@@ -59,12 +64,12 @@ void Camera::moveAndOrientCamera(glm::vec3 target, glm::vec2 rot_offset) {
 	mUp = glm::normalize(glm::cross(mRight, mFront));
 
 #if DEBUG_CAMERA
-	debug_camera();
+	debugCamera();
 #endif
 }
 
 // Debug
-const void Camera::debug_camera() {
+void Camera::debugCamera() const {
 	printf("pos_x: %.2f, pos_y: %.2f, pos_z: %.2f\n", mPosition.x, mPosition.y, mPosition.z);
 	printf("yaw: %.2f, pitch: %.2f\n", mYaw, mPitch);
 	printf("front_x: %.2f, front_y: %.2f, front_z: %.2f\n", mFront.x, mFront.y, mFront.z);

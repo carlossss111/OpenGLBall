@@ -9,6 +9,9 @@ class Cube {
 private:
 	GLuint mVBO;
 	GLuint mVAO;
+	glm::vec3 pos;
+	glm::vec3 rot;
+	glm::vec3 scl;
 	float mVertices[216] = {	
 		-1.0f, -1.0f, -1.0f,  	1.f, 0.0f, 0.0f,
 		1.0f, -1.0f, -1.0f,  	1.f, 0.0f, 0.0f,
@@ -55,6 +58,7 @@ private:
 
 public:
 	Cube();
+	Cube(float x, float y, float z);
 
 	void draw(Shader* shader) const;
 };

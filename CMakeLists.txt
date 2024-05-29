@@ -29,7 +29,7 @@ file(GLOB SOURCES
 
 # Debug Settings
 set(DEBUG_GL 1)
-set(DEBUG_CAMERA 1)
+set(DEBUG_CAMERA 0)
 
 ##############################
 #         CMAKE WORK         #
