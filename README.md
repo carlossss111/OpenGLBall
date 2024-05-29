@@ -19,4 +19,14 @@ make
 * The executable will be found in `build/`.
 
 ## Usage
-None so far.
+None so far. WIP.
+
+## Libraries
+Libraries are built from source in `lib/`.
+* glfw-3.4 Window API
+* gl3w-3a3327 OpenGL API
+* glm-0af5cc Matrix Maths
+* khr-platform-67a3e0 Types and Definitions
+* stb-image-2.29 Image Reader
+* assimp-5.4.1 Model & Mesh Loader
+OpenGL drivers are required for the target GPU.

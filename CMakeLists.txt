@@ -62,6 +62,10 @@ target_link_libraries(${PROJECT_NAME} glfw)
 add_subdirectory(lib/glm)
 target_link_libraries(${PROJECT_NAME} glm::glm)
 
+# Compile ASSIMP with source
+add_subdirectory(lib/assimp-5.4.1)
+target_link_libraries(${PROJECT_NAME} assimp::assimp)
+
 # Select NONE|NVIDIA|AMD depending on the system's discrete GPU.
 add_compile_definitions(${TARGET_GPU})
 
