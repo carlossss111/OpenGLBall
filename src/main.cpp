@@ -6,13 +6,14 @@ int main() {
     Renderer::initAll();
 
     // Init Classes
-    Shader shader("triangle.vert", "triangle.frag");
+    Shader shader("texture.vert", "texture.frag");
     Camera camera(glm::vec3(0, 0, 0), glm::vec2(45.f, 20.f));
-    Cube cube(0.f, 0.f, 0.f);
+    Model model(MODEL_DIR, "white_oak/white_oak.obj", 
+        glm::vec3(0.f, -1.f, 0.f), glm::vec3(), glm::vec3(0.005f, 0.005f, 0.005f));
    
     // Render Loop
     while (!glfwWindowShouldClose(window)) {
-        Renderer::renderScene(&shader, camera, cube);
+        Renderer::renderScene(&shader, camera, model);
         Input::processKeyboard(window, &camera);
 
         glfwSwapBuffers(window);

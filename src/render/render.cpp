@@ -46,7 +46,7 @@ void Renderer::initAll() {
     glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::renderScene(Shader* shader, const Camera& camera, const Cube& cube) {
+void Renderer::renderScene(Shader* shader, const Camera& camera, const Model& modelObj) {
     shader->use();
 
     // Handle depth etc
@@ -74,5 +74,5 @@ void Renderer::renderScene(Shader* shader, const Camera& camera, const Cube& cub
     shader->setMat4("projection", projection);
 
     // Draw Objects
-    cube.draw(shader);
+    modelObj.draw(shader);
 }

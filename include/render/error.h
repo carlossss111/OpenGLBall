@@ -20,6 +20,6 @@ namespace Renderer {
 			case GL_DEBUG_SEVERITY_HIGH:				fprintf(stderr, " severity = HIGH ");											break;
 		}
 
-		fprintf(stderr, "message = % s\n", message);
+		fprintf(stderr, "message = %s\n", message);
 	}
 }

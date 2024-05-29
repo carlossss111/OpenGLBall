@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.22)
 
 ##############################
 #      PROJECT SETTINGS      #
@@ -69,8 +69,9 @@ target_link_libraries(${PROJECT_NAME} assimp::assimp)
 # Select NONE|NVIDIA|AMD depending on the system's discrete GPU.
 add_compile_definitions(${TARGET_GPU})
 
-# Add shader directory definition
+# Add directory definitions
 add_compile_definitions(SHADER_DIR="${CMAKE_SOURCE_DIR}/shaders/")
+add_compile_definitions(MODEL_DIR="${CMAKE_SOURCE_DIR}/models/")
 
 # Add anti-aliasing definition
 add_compile_definitions(MULTISAMPLE_NUM=${MSAA_X})

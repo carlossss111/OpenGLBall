@@ -13,7 +13,7 @@
 #include "shader.h"
 #include "camera.h"
 
-#include "cube.h"
+#include "model.h"
 
 namespace Renderer {
 	static int gWindowWidth = WINDOW_WIDTH;
@@ -22,5 +22,5 @@ namespace Renderer {
 	void sizeCallback(GLFWwindow* window, int w, int h);
 	GLFWwindow* initWindow();
 	void initAll();
-	void renderScene(Shader* shader, const Camera& camera, const Cube& cube);
+	void renderScene(Shader* shader, const Camera& camera, const Model& model);
 }
