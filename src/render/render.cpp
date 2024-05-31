@@ -41,12 +41,12 @@ GLFWwindow* Renderer::initWindow() {
     return window;
 }
 
-void Renderer::initAll() {
+void Renderer::initGl() {
     // Init depth testing
     glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::renderScene(Shader* shader, const Camera& camera, const std::list<AbstractModel*>& modelList) {
+void Renderer::renderScene(Shader* shader, const Camera& camera, const Scene& scene) {
     shader->use();
 
     // Handle depth etc
@@ -74,7 +74,7 @@ void Renderer::renderScene(Shader* shader, const Camera& camera, const std::list
     shader->setMat4("projection", projection);
 
     // Draw Objects
-    for (auto it = modelList.begin(); it != modelList.end(); ++it) {
-        (*it)->draw(shader);
+    for (auto model = scene.begin(); model != scene.end(); ++model) {
+        (*model)->draw(shader);
     }
 }

@@ -3,7 +3,7 @@
 int main() {
     // GLFW Init
     GLFWwindow* window = Renderer::initWindow();
-    Renderer::initAll();
+    Renderer::initGl();
 
     // Init Classes
     Shader shader("texture.vert", "texture.frag");
@@ -14,7 +14,7 @@ int main() {
    
     // Render Loop
     while (!glfwWindowShouldClose(window)) {
-        Renderer::renderScene(&shader, camera, scene.getModels());
+        Renderer::renderScene(&shader, camera, scene);
         Input::processKeyboard(window, &camera);
 
         glfwSwapBuffers(window);

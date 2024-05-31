@@ -13,6 +13,7 @@
 #include "error.h"
 #include "shader.h"
 #include "camera.h"
+#include "scene.h"
 
 #include "abstract_model.h"
 
@@ -22,6 +23,6 @@ namespace Renderer {
 
 	void sizeCallback(GLFWwindow* window, int w, int h);
 	GLFWwindow* initWindow();
-	void initAll();
-	void renderScene(Shader* shader, const Camera& camera, const std::list<AbstractModel*>& modelList);
+	void initGl();
+	void renderScene(Shader* shader, const Camera& camera, const Scene& scene);
 }

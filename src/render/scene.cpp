@@ -1,14 +1,22 @@
 #include "scene.h"
 
-Scene::Scene() {
-    mModelList.push_back(new Model(MODEL_DIR, "white_oak/white_oak.obj",
-        glm::vec3(0.f, -1.f, 0.f), glm::vec3(), glm::vec3(0.005f, 0.005f, 0.005f)));
+void Scene::loadFromFile() {
+    SceneLoader loader(std::string(LEVEL_DIR), "one.level", std::string(MODEL_DIR));
+    loader.load(&mModelList);
+}
+
+void Scene::loadProcedural() {
     mModelList.push_back(new Cube(MODEL_DIR, "cube/cube.png",
-        glm::vec3(2.f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f)));
+        glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f)));
+}
+
+Scene::Scene() {
+    loadFromFile();
+    loadProcedural();
 }
 
 Scene::~Scene() {
-    for (auto it = mModelList.begin(); it != mModelList.end(); ++it) {
-        delete* it;
+    for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
+        delete* model;
     }
 }

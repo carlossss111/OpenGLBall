@@ -2,7 +2,7 @@
 
 #include <cstdio>
 #include <string>
-#include <gl/gl3w.h>
+#include <GL/gl3w.h>
 
 namespace Renderer {
 	GLuint createTexture(std::string filename);

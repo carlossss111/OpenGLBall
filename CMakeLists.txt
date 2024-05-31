@@ -76,6 +76,7 @@ add_compile_definitions(${TARGET_GPU})
 # Add directory definitions
 add_compile_definitions(SHADER_DIR="${CMAKE_SOURCE_DIR}/shaders/")
 add_compile_definitions(MODEL_DIR="${CMAKE_SOURCE_DIR}/models/")
+add_compile_definitions(LEVEL_DIR="${CMAKE_SOURCE_DIR}/levels/")
 
 # Add anti-aliasing definition
 add_compile_definitions(MULTISAMPLE_NUM=${MSAA_X})
