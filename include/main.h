@@ -2,13 +2,12 @@
 
 #include <cstdio>
 #include <string>
-#include <list>
 
 #include "render.h"
 #include "shader.h"
+#include "scene.h"
 #include "keyboard.h"
 #include "camera.h"
-#include "model.h"
 
 #ifdef NVIDIA
 extern "C" {

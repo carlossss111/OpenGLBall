@@ -52,33 +52,28 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 
 	// Process vertex position, normals and texels.
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-		Vertex vertex;
-		glm::vec3 vec3;
-
-		// Position
-		vec3.x = mesh->mVertices[i].x;
-		vec3.y = mesh->mVertices[i].y;
-		vec3.z = mesh->mVertices[i].z;
-		vertex.pos = vec3;
-
-		// Normals
-		vec3.x = mesh->mNormals[i].x;
-		vec3.y = mesh->mNormals[i].y;
-		vec3.z = mesh->mNormals[i].z;
-		vertex.nor = vec3;
-
-		// Texels
+		// Check Texels
+		float texU, texV;
 		if (mesh->mTextureCoords[0]) {
-			glm::vec2 vec2;
-			vec2.x = mesh->mTextureCoords[0][i].x;
-			vec2.y = mesh->mTextureCoords[0][i].y;
-			vertex.tex = vec2;
+			texU = mesh->mTextureCoords[0][i].x;
+			texV = mesh->mTextureCoords[0][i].y;
 		}
 		else {
-			vertex.tex = glm::vec2(0.0f, 0.0f);
+			texU = 0.f;
+			texV = 0.f;
 		}
 
-		verts.push_back(vertex);
+		// Create Vertex with position, normals and texels
+		verts.push_back(Mesh::initVertex(
+			mesh->mVertices[i].x,
+			mesh->mVertices[i].y,
+			mesh->mVertices[i].z,
+			mesh->mNormals[i].x,
+			mesh->mNormals[i].y,
+			mesh->mNormals[i].z,
+			texU,
+			texV
+		));
 	}
 
 	// Process indices

@@ -5,5 +5,7 @@
 
 class Cube : public AbstractModel {
 public:
-	Cube();
+	Cube(std::string textureDirectoryPath, std::string textureFilePath);
+	Cube(std::string textureDirectoryPath, std::string textureFilePath,
+		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 };

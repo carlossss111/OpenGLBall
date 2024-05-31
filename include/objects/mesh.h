@@ -4,6 +4,7 @@
 #include <string>
 
 #include <gl/gl3w.h>
+#include <glm/glm.hpp>
 
 #include "shader.h"
 
@@ -29,6 +30,9 @@ private:
 	unsigned int mVAO, mVBO, mEBO;
 
 public:
+	static Vertex initVertex(glm::vec3 pos, glm::vec3 nor, glm::vec2 tex);
+	static Vertex initVertex(float, float, float, float, float, float, float, float);
+
 	Mesh(std::vector<Vertex> verts, std::vector<unsigned int> indices, std::vector<Texture> textures);
 	void draw(Shader* shader) const;
 };
