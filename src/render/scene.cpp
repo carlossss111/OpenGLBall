@@ -1,7 +1,7 @@
 #include "scene.h"
 
 void Scene::loadFromFile() {
-    SceneLoader loader(std::string(LEVEL_DIR), "one.level", std::string(MODEL_DIR));
+    SceneLoader loader(LEVEL_DIR, "one.level", std::string(MODEL_DIR));
     loader.load(&mModelList);
 }
 

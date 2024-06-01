@@ -1,8 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "scene_loader.h"
 
 SceneLoader::SceneLoader(std::string levelDir, std::string levelName, std::string modelDir) :
 	mModelDir(modelDir) {
-	parse(levelDir + levelName);
+	parse(levelDir + "/" + levelName);
 };
 
 // Read a word to a string

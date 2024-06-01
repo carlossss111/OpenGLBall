@@ -1,6 +1,6 @@
 ﻿#include "main.h"
 
-int main() {
+int main(int argc, char** argv) {
     // GLFW Init
     GLFWwindow* window = Renderer::initWindow();
     Renderer::initGl();

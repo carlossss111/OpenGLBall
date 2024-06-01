@@ -31,6 +31,17 @@ file(GLOB SOURCES
 	src/input/*.cpp
 )
 
+# Levels to compile with
+set(LEVELS
+	levels/one.level
+)
+
+# Shaders to compile with
+set(SHADERS
+	shaders/texture.frag
+	shaders/texture.vert
+)
+
 # Debug Settings
 set(DEBUG_GL 1)
 set(DEBUG_CAMERA 0)
@@ -70,21 +81,39 @@ target_link_libraries(${PROJECT_NAME} glm::glm)
 add_subdirectory(lib/assimp-5.4.1)
 target_link_libraries(${PROJECT_NAME} assimp::assimp)
 
-# Select NONE|NVIDIA|AMD depending on the system's discrete GPU.
-add_compile_definitions(${TARGET_GPU})
+# Copy level files to binary directory
+foreach(LEVEL ${LEVELS})
+	configure_file(${CMAKE_SOURCE_DIR}/${LEVEL} ${CMAKE_BINARY_DIR}/${LEVEL} COPYONLY)
+endforeach()
 
-# Add directory definitions
-add_compile_definitions(SHADER_DIR="${CMAKE_SOURCE_DIR}/shaders/")
-add_compile_definitions(MODEL_DIR="${CMAKE_SOURCE_DIR}/models/")
-add_compile_definitions(LEVEL_DIR="${CMAKE_SOURCE_DIR}/levels/")
+# Copy shader files to binary directory
+foreach(SHADER ${SHADERS})
+	configure_file(${CMAKE_SOURCE_DIR}/${SHADER} ${CMAKE_BINARY_DIR}/${SHADER} COPYONLY)
+endforeach()
 
-# Add anti-aliasing definition
-add_compile_definitions(MULTISAMPLE_NUM=${MSAA_X})
+# Copy models
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                   ${CMAKE_SOURCE_DIR}/models ${CMAKE_BINARY_DIR}/models)
 
-# Add dimension definitions
-add_compile_definitions(WINDOW_WIDTH=${DEFAULT_WINDOW_WIDTH})
-add_compile_definitions(WINDOW_HEIGHT=${DEFAULT_WINDOW_HEIGHT})
+# Definitions
+add_compile_definitions(
+	# Select NONE|NVIDIA|AMD depending on the system's discrete GPU
+	${TARGET_GPU}
 
-# Add debug definitions
-add_compile_definitions(DEBUG_CAMERA=${DEBUG_CAMERA})
-add_compile_definitions(DEBUG_GL=${DEBUG_GL})
+	# Add directory definitions
+	SHADER_DIR="./shaders/"
+	MODEL_DIR="./models/"
+	LEVEL_DIR="./levels/"
+
+	# Add anti-aliasing definition
+	MULTISAMPLE_NUM=${MSAA_X}
+
+	# Add dimension definitions
+	WINDOW_WIDTH=${DEFAULT_WINDOW_WIDTH}
+	WINDOW_HEIGHT=${DEFAULT_WINDOW_HEIGHT}
+
+	# Add debug definitions
+	DEBUG_CAMERA=${DEBUG_CAMERA}
+	DEBUG_GL=${DEBUG_GL}
+)
