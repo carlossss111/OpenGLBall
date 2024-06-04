@@ -6,6 +6,7 @@
 
 #include "model.h"
 #include "cube.h"
+#include "sphere.h"
 
 class Scene : public std::list<AbstractModel*> {
 private:
