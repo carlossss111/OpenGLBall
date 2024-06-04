@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION    
 #include "stb/stb_image.h"
 
-GLuint Renderer::createTexture(std::string filename) {
+GLuint Renderer::createTexture(std::string filename, bool linearFilter) {
 	glEnable(GL_BLEND);
 
 	GLuint tex_object;
@@ -12,8 +12,14 @@ GLuint Renderer::createTexture(std::string filename) {
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	if (linearFilter) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	}
+	else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	}
 
 	int width, height, channels;
 	unsigned char* pxls = stbi_load(filename.c_str(), &width, &height, &channels, 0);

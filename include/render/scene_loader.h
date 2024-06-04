@@ -11,6 +11,9 @@
 
 #include "model.h"
 
+#include "cube.h"
+#include "sphere.h"
+
 /*
 
 == STRUCTURE A FILE LIKE SO ==
@@ -31,6 +34,7 @@ class SceneLoader {
 private:
 	struct PreloadedModel {
 		std::string path;
+		std::string preClass;
 		std::vector<float> pos;
 		std::vector<float> rot;
 		std::vector<float> scl;
@@ -49,8 +53,24 @@ private:
 		ROTATION,
 		SCALE,
 		TAG,
+		CLASS,
 		SELECTOR
 	};
+
+	AbstractModel* newModel(std::string modelName) {
+		if (modelName.compare("cube") == 0) {
+			return new Cube("", "");
+		}
+		else if (modelName.compare("checkeredcube") == 0) {
+			return new Cube("", "");
+		}
+		else if (modelName.compare("sphere") == 0) {
+			return new Sphere("", "");
+		}
+		else {
+			return new Model("", "");
+		}
+	}
 
 	std::string mModelDir;
 	std::list<PreloadedModel> mPreloadedModels;

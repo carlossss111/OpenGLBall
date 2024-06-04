@@ -30,6 +30,7 @@ float readValue(FILE* fp, char& c) {
 
 int SceneLoader::parse(std::string path) {
 	std::map<std::string, std::string> nameToPathMap;
+	std::map<std::string, std::string> nameToClassMap;
 
 	FILE* fp;
 	if ((fp = fopen(path.c_str(), "r")) == NULL) {
@@ -60,22 +61,36 @@ int SceneLoader::parse(std::string path) {
 			std::string modeStr = readWord(fp, c);
 			if (modeStr == "!Models") {
 				mode = MODEL;
+				strType = NAME;
 			}
 			else if (modeStr == "!Level") {
 				mode = LEVEL;
+				strType = SELECTOR;
 			}
 		}
 
 		// Model Mode
 		else if (comment == false && mode == MODEL) {
 			static std::string modelName;
-			if (modelName.empty()) {
+			if (strType == NAME) {
 				modelName = readWord(fp, c);
+				strType = PATH;
 			}
-			else {
+			else if (strType == PATH) {
 				std::string modelPath = readWord(fp, c);
 				nameToPathMap.insert_or_assign(modelName, modelPath);
+				if (c == '\n') {
+					strType = NAME;
+				}
+				else {
+					strType = CLASS;
+				}
+			}
+			else if (strType == CLASS) {
+				std::string modelClass = readWord(fp, c);
+				nameToClassMap.insert_or_assign(modelName, modelClass);
 				modelName.clear();
+				strType = NAME;
 			}
 			
 		}
@@ -87,6 +102,9 @@ int SceneLoader::parse(std::string path) {
 					std::string name = readWord(fp, c);
 					try {
 						premodel.path = nameToPathMap.at(name);
+						if (nameToClassMap.contains(name)) {
+							premodel.preClass = nameToClassMap.at(name);
+						}
 					}
 					catch (std::out_of_range &e) {
 						fprintf(stderr, "Failure to read model path %s\n", e.what());
@@ -178,25 +196,54 @@ int SceneLoader::load(std::list<AbstractModel*>* modelList) {
 			preloaded.scl.push_back(1.f);
 			preloaded.scl.push_back(1.f);
 		}
+		if (preloaded.preClass.empty()) {
+			preloaded.preClass = "Model";
+		}
 
 		// Create Model
-		Model* model = new Model(
-			mModelDir.c_str(),
-			preloaded.path,
-			glm::vec3(
-				preloaded.pos[0],
-				preloaded.pos[1],
-				preloaded.pos[2]),
-			glm::vec3(
-				preloaded.rot[0],
-				preloaded.rot[1],
-				preloaded.rot[2]),
-			glm::vec3(
-				preloaded.scl[0],
-				preloaded.scl[1],
-				preloaded.scl[2]),
-			preloaded.tags
-		);
+		AbstractModel* model;
+		if (preloaded.preClass.compare("Cube") == 0) {
+			model = new Cube(
+				mModelDir.c_str(),
+				preloaded.path,
+				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
+				glm::vec3(preloaded.rot[0], preloaded.rot[1], preloaded.rot[2]),
+				glm::vec3(preloaded.scl[0], preloaded.scl[1], preloaded.scl[2]),
+				glm::vec2(1.f, 1.f),
+				preloaded.tags);
+		}
+		else if (preloaded.preClass.compare("CheckeredCube") == 0) {
+			model = new Cube(
+				mModelDir.c_str(),
+				preloaded.path,
+				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
+				glm::vec3(preloaded.rot[0], preloaded.rot[1], preloaded.rot[2]),
+				glm::vec3(preloaded.scl[0], preloaded.scl[1], preloaded.scl[2]),
+				glm::vec2(3.f, 3.f),
+				preloaded.tags);
+		}
+		else if (preloaded.preClass.compare("Sphere") == 0) {
+			model = new Sphere(
+				mModelDir.c_str(),
+				preloaded.path,
+				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
+				glm::vec3(preloaded.rot[0], preloaded.rot[1], preloaded.rot[2]),
+				glm::vec3(preloaded.scl[0], preloaded.scl[1], preloaded.scl[2]),
+				preloaded.tags);
+		}
+		else if (preloaded.preClass.compare("Model") == 0){
+			model = new Model(
+				mModelDir.c_str(),
+				preloaded.path,
+				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
+				glm::vec3(preloaded.rot[0], preloaded.rot[1], preloaded.rot[2]),
+				glm::vec3(preloaded.scl[0], preloaded.scl[1], preloaded.scl[2]),
+				preloaded.tags
+			);
+		}
+		else {
+			fprintf(stderr, "%s - unrecognised model subclass.", preloaded.preClass.c_str());
+		}
 		modelList->push_back(model);
 	}
 	return 0;

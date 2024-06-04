@@ -5,5 +5,5 @@
 #include <GL/gl3w.h>
 
 namespace Renderer {
-	GLuint createTexture(std::string filename);
+	GLuint createTexture(std::string filename, bool withLinearFilter = true);
 }
