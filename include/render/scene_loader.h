@@ -7,6 +7,7 @@
 #include <list>
 #include <string>
 #include <map>
+#include <set>
 
 #include "model.h"
 
@@ -33,7 +34,7 @@ private:
 		std::vector<float> pos;
 		std::vector<float> rot;
 		std::vector<float> scl;
-		std::list<std::string> tags; //TODO
+		std::set<std::string> tags;
 	};
 
 	enum Mode {

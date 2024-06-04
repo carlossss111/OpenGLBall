@@ -2,8 +2,9 @@
 
 #include <glm/glm.hpp>
 #include <list>
-#include "scene_loader.h"
+#include <set>
 
+#include "scene_loader.h"
 #include "model.h"
 #include "cube.h"
 #include "sphere.h"
@@ -31,6 +32,8 @@ public:
 	const_iterator end() const {
 		return mModelList.end();
 	}
+
+	AbstractModel* get(std::string tag) const; //nullable
 
 private:
 	void loadFromFile();

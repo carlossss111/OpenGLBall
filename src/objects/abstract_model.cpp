@@ -19,3 +19,51 @@ void AbstractModel::draw(Shader* shader) const {
 		mMeshes[i].draw(shader);
 	}
 }
+
+void AbstractModel::setPosition(glm::vec3 posIn) {
+	pos = posIn;
+}
+
+void AbstractModel::setRotation(glm::vec3 rotIn) {
+	rot = rotIn;
+}
+
+void AbstractModel::setScale(glm::vec3 sclIn) {
+	scl = sclIn;
+}
+
+void AbstractModel::addPosition(glm::vec3 posIn) {
+	pos += posIn;
+}
+
+void AbstractModel::addRotation(glm::vec3 rotIn) {
+	rot += rotIn;
+}
+
+void AbstractModel::addScale(glm::vec3 sclIn) {
+	scl += sclIn;
+}
+
+glm::vec3 AbstractModel::getPosition() const {
+	return pos;
+}
+
+glm::vec3 AbstractModel::getRotation() const {
+	return rot;
+}
+
+glm::vec3 AbstractModel::getScale() const {
+	return scl;
+}
+
+void AbstractModel::addTag(std::string tag) {
+	mTags.insert(tag);
+}
+
+void AbstractModel::removeTag(std::string tag) {
+	mTags.erase(tag);
+}
+
+std::set<std::string> AbstractModel::getTags() {
+	return mTags;
+}

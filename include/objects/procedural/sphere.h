@@ -12,5 +12,6 @@ private:
 public:
 	Sphere(std::string textureDirectoryPath, std::string textureFilePath);
 	Sphere(std::string textureDirectoryPath, std::string textureFilePath,
-		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale,
+		std::set<std::string> tags = std::set<std::string>());
 };

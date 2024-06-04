@@ -24,12 +24,14 @@ Model::Model(const char* directoryPath, std::string filePath) {
 }
 
 Model::Model(const char* directoryPath, std::string filePath,
-	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) :
+	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, 
+	std::set<std::string> tags) :
 	Model(directoryPath, filePath) {
 
 	pos = position;
 	rot = rotation;
 	scl = scale;
+	mTags = tags;
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene) {

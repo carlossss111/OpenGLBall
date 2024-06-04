@@ -81,9 +81,11 @@ Sphere::Sphere(std::string directoryPath, std::string filePath) {
 }
 
 Sphere::Sphere(std::string directoryPath, std::string filePath,
-	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
+	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale,
+    std::set<std::string> tags)
 	: Sphere(directoryPath, filePath) {
 	pos = position;
 	rot = rotation;
 	scl = scale;
+    mTags = tags;
 }

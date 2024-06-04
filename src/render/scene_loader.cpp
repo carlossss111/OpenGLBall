@@ -8,14 +8,13 @@ SceneLoader::SceneLoader(std::string levelDir, std::string levelName, std::strin
 };
 
 // Read a word to a string
-std::string readWord(FILE* fp) {
+std::string readWord(FILE* fp, char& c) {
 	fseek(fp, -1, SEEK_CUR);
 	std::string word;
-	char c;
 
 	// Read word until delimiter
 	while ((c = fgetc(fp)) != EOF) {
-		if (c == ' ' || c == '\n' || c == '\r' || c == ',' || c == '\t') {
+		if (c == ' ' || c == '\n' || c == '\r' || c == ',' || c == '\t' || c == '}') {
 			break;
 		}
 		word += c;
@@ -24,11 +23,9 @@ std::string readWord(FILE* fp) {
 	return word;
 }
 
-float readValue(FILE* fp) {
-	std::string word = readWord(fp);
-
-	float f = strtof(word.c_str(), NULL);
-	return f;
+float readValue(FILE* fp, char& c) {
+	std::string word = readWord(fp, c);
+	return strtof(word.c_str(), NULL);
 }
 
 int SceneLoader::parse(std::string path) {
@@ -55,12 +52,12 @@ int SceneLoader::parse(std::string path) {
 		else if (c == '\n') {
 			comment = false;
 		}
-		else if (c == ' ' || c == ',' || c == '\t' || c == ':') {
+		else if (c == ' ' || c == ',' || c == '\t' || c == ':' || c == '{') {
 			continue;//skip
 		}
 		else if (c == '!') {
 			if (comment) { break; }
-			std::string modeStr = readWord(fp);
+			std::string modeStr = readWord(fp, c);
 			if (modeStr == "!Models") {
 				mode = MODEL;
 			}
@@ -73,10 +70,10 @@ int SceneLoader::parse(std::string path) {
 		else if (comment == false && mode == MODEL) {
 			static std::string modelName;
 			if (modelName.empty()) {
-				modelName = readWord(fp);
+				modelName = readWord(fp, c);
 			}
 			else {
-				std::string modelPath = readWord(fp);
+				std::string modelPath = readWord(fp, c);
 				nameToPathMap.insert_or_assign(modelName, modelPath);
 				modelName.clear();
 			}
@@ -87,7 +84,7 @@ int SceneLoader::parse(std::string path) {
 		else if (comment == false && mode == LEVEL) {
 			if (strType != SELECTOR) {
 				if (strType == NAME) {
-					std::string name = readWord(fp);
+					std::string name = readWord(fp, c);
 					try {
 						premodel.path = nameToPathMap.at(name);
 					}
@@ -99,21 +96,32 @@ int SceneLoader::parse(std::string path) {
 					strType = SELECTOR;
 				}
 				else if (strType == POSITION) {
-					premodel.pos.push_back(readValue(fp));
+					premodel.pos.push_back(readValue(fp, c));
 					if (premodel.pos.size() == 3) {
 						strType = SELECTOR;
 					}
 				}
 				else if (strType == ROTATION) {
-					premodel.rot.push_back(readValue(fp));
+					premodel.rot.push_back(readValue(fp, c));
 					if (premodel.rot.size() == 3) {
 						strType = SELECTOR;
 					}
 				}
 				else if (strType == SCALE) {
-					premodel.scl.push_back(readValue(fp));
+					premodel.scl.push_back(readValue(fp, c));
 					if (premodel.scl.size() == 3) {
 						strType = SELECTOR;
+					}
+				}
+				else if (strType == TAG) {
+					premodel.tags.insert(readWord(fp, c));
+					if (c == '}') {
+						strType = SELECTOR;
+					}
+					else if (c == '\n') {
+						fprintf(stderr, "Malformed tag set.");
+						fclose(fp);
+						return 1;
 					}
 				}
 			}
@@ -186,7 +194,8 @@ int SceneLoader::load(std::list<AbstractModel*>* modelList) {
 			glm::vec3(
 				preloaded.scl[0],
 				preloaded.scl[1],
-				preloaded.scl[2])
+				preloaded.scl[2]),
+			preloaded.tags
 		);
 		modelList->push_back(model);
 	}

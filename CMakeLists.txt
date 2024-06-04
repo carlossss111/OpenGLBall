@@ -43,8 +43,10 @@ set(SHADERS
 )
 
 # Debug Settings
-set(DEBUG_GL 1)
-set(DEBUG_CAMERA 0)
+if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
+	set(DEBUG_GL 1)
+	set(DEBUG_CAMERA 0)
+endif()
 
 ##############################
 #         CMAKE WORK         #

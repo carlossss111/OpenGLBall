@@ -5,6 +5,6 @@ White_Oak,			white_oak/white_oak.obj
 
 !Level
 
-#Name				Position		Rotation		Scale	
-n:White_Oak			p:2.5, -0.5,0	r:0,45,0		s:0.005,0.005,0.005
+#Name				Position		Rotation		Scale					Tags
+n:White_Oak			p:2.5, -0.5,0	r:0,45,0		s:0.005,0.005,0.005		t:{hello,world}
 n:White_Oak			p:-2.5,-0.5,0					s:0.005,0.005,0.005

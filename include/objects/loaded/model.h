@@ -11,7 +11,8 @@ class Model : public AbstractModel {
 public:
 	Model(const char* directoryPath, std::string filePath);
 	Model(const char* directoryPath, std::string filePath,
-		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale,
+		std::set<std::string> tags);
 
 private:
 	void processNode(aiNode* node, const aiScene* scene);
