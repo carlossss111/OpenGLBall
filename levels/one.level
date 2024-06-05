@@ -6,13 +6,13 @@ White_Oak,			white_oak/white_oak.obj
 
 # === Procedural === 
 #Name				Texture Path					C++ Object
-Crate				cube/crate.png					Cube
+Crate				cube/container.png				Cube
 Floor				cube/checkers.png				CheckeredCube
 Ball				sphere/sphere.bmp				Sphere
 
 !Level
 
-# ===  Level 1   ===
+# ===   Level    ===
 #Name				Position		Rotation		Scale					Tags
 n:White_Oak			p:2.5, -0.5,0	r:0,45,0		s:0.005,0.005,0.005		
 n:White_Oak			p:-2.5,-0.5,0					s:0.005,0.005,0.005

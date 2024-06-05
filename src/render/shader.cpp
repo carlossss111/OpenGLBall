@@ -62,6 +62,11 @@ Shader::Shader(std::string vsFilename, std::string fsFilename) {
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+
+    // Init Materials
+    use();
+    setInt("material.diffuse", 0);
+    setInt("material.specular", 1);
 }
 
 void Shader::use() const {
@@ -84,10 +89,26 @@ void Shader::setBool(const std::string& name, GLboolean value) {
     glUniform1i(glGetUniformLocation(mProgramID, name.c_str()), value);
 }
 
+void Shader::setMat2(const std::string& name, glm::mat2 value) {
+    glUniformMatrix2fv(glGetUniformLocation(mProgramID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
+
 void Shader::setMat3(const std::string& name, glm::mat3 value) {
     glUniformMatrix3fv(glGetUniformLocation(mProgramID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void Shader::setMat4(const std::string& name, glm::mat4 value) {
     glUniformMatrix4fv(glGetUniformLocation(mProgramID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::setVec2(const std::string& name, glm::vec2 value) {
+    glUniform2fv(glGetUniformLocation(mProgramID, name.c_str()), 1, glm::value_ptr(value));
+}
+
+void Shader::setVec3(const std::string& name, glm::vec3 value) {
+    glUniform3fv(glGetUniformLocation(mProgramID, name.c_str()), 1, glm::value_ptr(value));
+}
+
+void Shader::setVec4(const std::string& name, glm::vec4 value) {
+    glUniform4fv(glGetUniformLocation(mProgramID, name.c_str()), 1, glm::value_ptr(value));
 }

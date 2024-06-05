@@ -203,9 +203,14 @@ int SceneLoader::load(std::list<AbstractModel*>* modelList) {
 		// Create Model
 		AbstractModel* model;
 		if (preloaded.preClass.compare("Cube") == 0) {
+			// Specular path in this case is the name appended with _spec, should be changed later
+			std::string specularPath = preloaded.path;
+			std::string fileType = specularPath.substr(specularPath.find('.'), specularPath.length());
+			specularPath.erase(specularPath.find('.'), specularPath.length());
+			specularPath += "_spec" + fileType;
 			model = new Cube(
 				mModelDir.c_str(),
-				preloaded.path,
+				preloaded.path, specularPath,
 				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
 				glm::vec3(preloaded.rot[0], preloaded.rot[1], preloaded.rot[2]),
 				glm::vec3(preloaded.scl[0], preloaded.scl[1], preloaded.scl[2]),
@@ -215,7 +220,7 @@ int SceneLoader::load(std::list<AbstractModel*>* modelList) {
 		else if (preloaded.preClass.compare("CheckeredCube") == 0) {
 			model = new Cube(
 				mModelDir.c_str(),
-				preloaded.path,
+				preloaded.path, std::string(),
 				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
 				glm::vec3(preloaded.rot[0], preloaded.rot[1], preloaded.rot[2]),
 				glm::vec3(preloaded.scl[0], preloaded.scl[1], preloaded.scl[2]),

@@ -47,6 +47,7 @@ void Mesh::draw(Shader* shader) const{
 
     // Store materials in material struct and
     // bind them to the correct number.
+    shader->setFloat("material.shininess", 64.f);
     for (int i = 0; i < mTextures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         std::string number;
@@ -66,4 +67,10 @@ void Mesh::draw(Shader* shader) const{
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES, (GLsizei)(mIndices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+
+    // Reset all textures for next pass
+    for (int i = 0; i < mTextures.size(); i++) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 }

@@ -38,8 +38,8 @@ set(LEVELS
 
 # Shaders to compile with
 set(SHADERS
-	shaders/texture.frag
-	shaders/texture.vert
+	shaders/phong.frag
+	shaders/phong.vert
 )
 
 # Debug Settings

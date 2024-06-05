@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     Renderer::initGl();
 
     // Init Classes
-    Shader shader("texture.vert", "texture.frag");
+    Shader shader("phong.vert", "phong.frag");
     Camera camera(glm::vec3(0, 0, 0), glm::vec2(45.f, 20.f));
 
     // Init Models

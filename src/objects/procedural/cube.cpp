@@ -1,6 +1,6 @@
 #include "cube.h"
 
-void Cube::init(std::string directoryPath, std::string filePath) {
+void Cube::init(std::string directoryPath, std::string diffuseFilePath, std::string specularFilePath) {
 	std::vector<Vertex> verts;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
@@ -61,19 +61,30 @@ void Cube::init(std::string directoryPath, std::string filePath) {
 
 	// Textures
 	Texture tex;
-	tex.id = Renderer::createTexture(directoryPath + "/" + filePath);
-	tex.path = filePath;
+	tex.id = Renderer::createTexture(directoryPath + "/" + diffuseFilePath);
+	tex.path = diffuseFilePath;
 	tex.type = "texture_diffuse";
 	textures.push_back(tex);
+	mTexturesLoaded.push_back(tex);
+
+	if (!specularFilePath.empty()) {
+		Texture tex2;
+		tex2.id = Renderer::createTexture(directoryPath + "/" + specularFilePath);
+		tex2.path = specularFilePath;
+		tex2.type = "texture_specular";
+		textures.push_back(tex2);
+		mTexturesLoaded.push_back(tex2);
+	}
 
 	mMeshes.push_back(Mesh(verts, indices, textures));
 }
 
-Cube::Cube(std::string directoryPath, std::string filePath) {
-	init(directoryPath, filePath);
+Cube::Cube(std::string directoryPath, std::string diffuseFilePath, std::string specularFilePath) {
+	init(directoryPath, diffuseFilePath, specularFilePath);
 }
 
-Cube::Cube(std::string directoryPath, std::string filePath,
+Cube::Cube(std::string directoryPath, std::string diffuseFilePath, 
+	std::string specularFilePath,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale,
 	glm::vec2 repeatingTextures, std::set<std::string> tags){
 	pos = position;
@@ -82,5 +93,5 @@ Cube::Cube(std::string directoryPath, std::string filePath,
 	mTags = tags;
 	mTexW = repeatingTextures.x * scale.x;
 	mTexH = repeatingTextures.y * scale.z;
-	init(directoryPath, filePath);
+	init(directoryPath, diffuseFilePath, specularFilePath);
 }

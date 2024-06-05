@@ -24,6 +24,10 @@ public:
 	void setInt(const std::string &name, GLint value);
 	void setFloat(const std::string &name, GLfloat value);
 	void setBool(const std::string &name, GLboolean value);
-	void setMat3(const std::string& name, glm::mat3 value);
+	void setMat2(const std::string &name, glm::mat2 value);
+	void setMat3(const std::string &name, glm::mat3 value);
 	void setMat4(const std::string &name, glm::mat4 value);
+	void setVec2(const std::string& name, glm::vec2 value);
+	void setVec3(const std::string& name, glm::vec3 value);
+	void setVec4(const std::string& name, glm::vec4 value);
 };

@@ -49,6 +49,13 @@ void Renderer::initGl() {
 void Renderer::renderScene(Shader* shader, const Camera& camera, const Scene& scene) {
     shader->use();
 
+    // Set Lighting Uniforms
+    shader->setVec3("cameraPos",        camera.getPosition());
+    shader->setVec3("light.position",   glm::vec3(1.2f, 1.0f, 2.0f));
+    shader->setVec3("light.ambient",    glm::vec3(0.2f, 0.2f, 0.2f));
+    shader->setVec3("light.diffuse",    glm::vec3(0.5f, 0.5f, 0.5f));
+    shader->setVec3("light.specular",   glm::vec3(1.0f, 1.0f, 1.0f));
+
     // Handle depth etc
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glClearColor(1.f, 1.f, 1.f, 0.f);
