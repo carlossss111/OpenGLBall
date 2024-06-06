@@ -4,6 +4,7 @@
 #include "stb/stb_image.h"
 
 GLuint Renderer::createTexture(std::string filename, bool linearFilter) {
+	stbi_set_flip_vertically_on_load(true);
 	glEnable(GL_BLEND);
 
 	GLuint tex_object;
@@ -21,23 +22,21 @@ GLuint Renderer::createTexture(std::string filename, bool linearFilter) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 	}
 
+	// Load texture images. STBI_rgb_alpha forces all images to have 4 colour channels.
 	int width, height, channels;
-	unsigned char* pxls = stbi_load(filename.c_str(), &width, &height, &channels, 0);
-
+	unsigned char* pxls = stbi_load(filename.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 	if (pxls != NULL) {
 		printf("Loaded %s\n", filename.c_str());
-		if (channels == 4)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pxls);
-		if (channels == 3)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pxls);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pxls);
 	}
 	else {
 		printf("Failed to load %s\n", filename.c_str());
 	}
+	
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	delete[] pxls;
+	stbi_image_free(pxls);
 
 	glDisable(GL_BLEND);
 

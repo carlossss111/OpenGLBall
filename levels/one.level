@@ -2,7 +2,8 @@
 
 # ===  Modelled  ===
 #Name				Model path
-White_Oak,			white_oak/white_oak.obj
+White_Oak			white_oak/white_oak.obj
+Backpack			backpack/backpack.obj
 
 # === Procedural === 
 #Name				Texture Path					C++ Object
@@ -14,8 +15,9 @@ Ball				sphere/sphere.bmp				Sphere
 
 # ===   Level    ===
 #Name				Position		Rotation		Scale					Tags
-n:White_Oak			p:2.5, -0.5,0	r:0,45,0		s:0.005,0.005,0.005		
+n:White_Oak			p:2.5, -0.5,0	r:0,45,0	s:0.005,0.005,0.005		
 n:White_Oak			p:-2.5,-0.5,0					s:0.005,0.005,0.005
+n:Backpack			p:0,-0.2,1.2	r:0,20,0		s:0.2,0.2,0.2			t:{debug}
 n:Ball				p:0,1,0			r:80,0,45
 n:Floor				p:0,-0.5,0						s:7,0.005,3
-n:Crate																		t:{hello,world}
+n:Crate

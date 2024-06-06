@@ -33,7 +33,7 @@ GLFWwindow* Renderer::initWindow() {
         fprintf(stderr, "Failed to load OpenGL API definitions with GL3W.");
         exit(1);
     }
-#if DEBUG_GL
+#ifdef DEBUG_GL
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(Renderer::debugMessageCallback, 0);
 #endif

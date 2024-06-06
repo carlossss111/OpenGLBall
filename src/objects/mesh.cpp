@@ -36,41 +36,36 @@ Mesh::Mesh(std::vector<Vertex> verts, std::vector<unsigned int> indices, std::ve
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, nor));
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
-
-    // Unbind
-    glBindVertexArray(0);
 }
 
 void Mesh::draw(Shader* shader) const{
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
+#ifdef DEBUG_LINES
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 
-    // Store materials in material struct and
-    // bind them to the correct number.
-    shader->setFloat("material.shininess", 64.f);
-    for (int i = 0; i < mTextures.size(); i++) {
+    const int maxTextures = 2; // for now
+
+    shader->setFloat("material.shininess", 80.f);
+    shader->setBool("material.hasSpecular", GL_FALSE);
+
+    // Bind diffuse and specular textures
+    for (int i = 0; i < maxTextures && i < mTextures.size(); i++) {
+        // Bind Texture
         glActiveTexture(GL_TEXTURE0 + i);
-        std::string number;
         std::string name = mTextures[i].type;
-        if (name.compare("texture_diffuse") == 0) {
-            number = std::to_string(diffuseNr++);
-        }
-        else if (name.compare("texture_specular") == 0) {
-            number = std::to_string(specularNr++);
-        }
-        shader->setInt("material." + name + number, i);
+        shader->setInt("material." + name, i);
         glBindTexture(GL_TEXTURE_2D, mTextures[i].id);
+
+        // Describe whether the mesh has a specular texture or not.
+        // This prevents materials that don't have specular bindings using the specular
+        // texture from the previously drawn mesh.
+        if (name.compare("specular") == 0) {
+            shader->setBool("material.hasSpecular", GL_TRUE);
+        }
     }
     glActiveTexture(GL_TEXTURE0);
 
     // Draw the Objects
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES, (GLsizei)(mIndices.size()), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-
-    // Reset all textures for next pass
-    for (int i = 0; i < mTextures.size(); i++) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
 }

@@ -63,7 +63,7 @@ void Camera::moveAndOrientCamera(glm::vec3 target, glm::vec2 rotOffset) {
 	mRight = glm::normalize(glm::cross(mFront, mWorldUp));
 	mUp = glm::normalize(glm::cross(mRight, mFront));
 
-#if DEBUG_CAMERA
+#ifdef DEBUG_CAMERA
 	debugCamera();
 #endif
 }

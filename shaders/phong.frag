@@ -10,6 +10,7 @@ struct Material {
 	sampler2D diffuse;
 	sampler2D specular;
 	float shininess;
+	bool hasSpecular;
 };
 
 struct Light {
@@ -34,11 +35,13 @@ vec3 calculateDirectionalLight(){
 	vec3 diffuse = light.diffuse * diff * texture(material.diffuse, fTex).rgb;
 
 	// Specular
-	vec3 viewDir = normalize(cameraPos - fPos);
-	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.f), material.shininess);
-	vec3 specular = light.specular * spec * texture(material.specular, fTex).rgb;
-
+	vec3 specular = vec3(0.f,0.f,0.f);
+	if(material.hasSpecular){
+		vec3 viewDir = normalize(cameraPos - fPos);
+		vec3 reflectDir = reflect(-lightDir, norm);
+		float spec = pow(max(dot(viewDir, reflectDir), 0.f), material.shininess);
+		specular = light.specular * spec * texture(material.specular, fTex).rgb;
+	}
 	return ambient + diffuse + specular;
 }
 
@@ -48,5 +51,4 @@ void main() {
 		discard;
 	}
 	fColour = vec4(calculateDirectionalLight(), 1.f);
-
 }

@@ -44,8 +44,11 @@ set(SHADERS
 
 # Debug Settings
 if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
-	set(DEBUG_GL 1)
-	set(DEBUG_CAMERA 0)
+	add_compile_definitions(
+		#DEBUG_CAMERA
+		#DEBUG_LINES
+		DEBUG_GL
+	)
 endif()
 
 ##############################
@@ -114,8 +117,4 @@ add_compile_definitions(
 	# Add dimension definitions
 	WINDOW_WIDTH=${DEFAULT_WINDOW_WIDTH}
 	WINDOW_HEIGHT=${DEFAULT_WINDOW_HEIGHT}
-
-	# Add debug definitions
-	DEBUG_CAMERA=${DEBUG_CAMERA}
-	DEBUG_GL=${DEBUG_GL}
 )

@@ -74,7 +74,7 @@ Sphere::Sphere(std::string directoryPath, std::string filePath) {
     Texture tex;
     tex.id = Renderer::createTexture(directoryPath + "/" + filePath);
     tex.path = filePath;
-    tex.type = "texture_diffuse";
+    tex.type = "diffuse";
     textures.push_back(tex);
 
     mMeshes.push_back(Mesh(verts, indices, textures));

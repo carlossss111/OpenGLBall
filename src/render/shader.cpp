@@ -63,10 +63,6 @@ Shader::Shader(std::string vsFilename, std::string fsFilename) {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // Init Materials
-    use();
-    setInt("material.diffuse", 0);
-    setInt("material.specular", 1);
 }
 
 void Shader::use() const {
