@@ -46,21 +46,29 @@ void Renderer::initGl() {
     glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::renderScene(Shader* shader, const Camera& camera, const Scene& scene) {
-    shader->use();
+void Renderer::renderScene(Shader* mainShader, Shader* shadowShader, const Camera& camera, const Scene& scene, Shadow& shadow, Light& light) {
+    mainShader->use();
 
     // Set Lighting Uniforms
-    shader->setVec3("cameraPos",        camera.getPosition());
-    shader->setVec3("light.position",   glm::vec3(1.2f, 1.0f, 2.0f));
-    shader->setVec3("light.ambient",    glm::vec3(0.2f, 0.2f, 0.2f));
-    shader->setVec3("light.diffuse",    glm::vec3(0.5f, 0.5f, 0.5f));
-    shader->setVec3("light.specular",   glm::vec3(1.0f, 1.0f, 1.0f));
+    mainShader->setVec3("cameraPos",        camera.getPosition());
+    mainShader->setVec3("light.position",   light.pos);
+    mainShader->setVec3("light.ambient",    light.ambient);
+    mainShader->setVec3("light.diffuse",    light.diffuse);
+    mainShader->setVec3("light.specular",   light.specular);
 
     // Handle depth etc
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glClearColor(1.f, 1.f, 1.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
+
+    // Depth Mapping
+    shadowShader->use();
+    glCullFace(GL_FRONT);
+    glm::mat4 projectedLightSpace = shadow.calcProjectedLightSpace(light.pos);
+    shadow.createDepthMap(shadowShader, projectedLightSpace, &scene, gWindowWidth, gWindowHeight);
+    glCullFace(GL_BACK);
+    mainShader->use();
 
     // View Matrix
     glm::mat4 view = glm::mat4(1.f);
@@ -69,7 +77,7 @@ void Renderer::renderScene(Shader* shader, const Camera& camera, const Scene& sc
         camera.getPosition() + camera.getFront(), 
         camera.getUp()
     );
-    shader->setMat4("view", view);
+    mainShader->setMat4("view", view);
 
     // Perspective Matrix
     glm::mat4 projection = glm::mat4(1.f);
@@ -78,10 +86,15 @@ void Renderer::renderScene(Shader* shader, const Camera& camera, const Scene& sc
         (float)Renderer::gWindowWidth / (float)Renderer::gWindowHeight, 
         .01f, 10000.f
     );
-    shader->setMat4("projection", projection);
+    mainShader->setMat4("projection", projection);
+    mainShader->setVec3("lightPos", light.pos);
+    mainShader->setMat4("projectedLightSpace", projectedLightSpace);
 
     // Draw Objects
     for (auto model = scene.begin(); model != scene.end(); ++model) {
-        (*model)->draw(shader);
+        glActiveTexture(GL_TEXTURE10);
+        mainShader->setInt("depthMap", 10);
+        glBindTexture(GL_TEXTURE_2D, shadow.getDepthMap());
+        (*model)->draw(mainShader);
     }
 }

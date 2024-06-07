@@ -14,6 +14,8 @@
 #include "shader.h"
 #include "camera.h"
 #include "scene.h"
+#include "shadow.h"
+#include "light.h"
 
 #include "abstract_model.h"
 
@@ -24,5 +26,5 @@ namespace Renderer {
 	void sizeCallback(GLFWwindow* window, int w, int h);
 	GLFWwindow* initWindow();
 	void initGl();
-	void renderScene(Shader* shader, const Camera& camera, const Scene& scene);
+	void renderScene(Shader* mainShader, Shader* shadowShader, const Camera& camera, const Scene& scene, Shadow& shadow, Light& light);
 }

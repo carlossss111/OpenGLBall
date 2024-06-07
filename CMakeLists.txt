@@ -40,6 +40,8 @@ set(LEVELS
 set(SHADERS
 	shaders/phong.frag
 	shaders/phong.vert
+	shaders/depth.frag
+	shaders/depth.vert
 )
 
 # Debug Settings

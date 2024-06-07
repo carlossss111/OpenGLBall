@@ -1,6 +1,6 @@
 #include "keyboard.h"
 
-void Input::processKeyboard(GLFWwindow* window, Camera* camera) {
+void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light) {
 	glm::vec2 rotOffset = glm::vec2(0.f, 0.f);
 	bool camChanged = false;
 
@@ -40,6 +40,11 @@ void Input::processKeyboard(GLFWwindow* window, Camera* camera) {
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 		camera->addDistance(0.1f);
 		camChanged = true;
+	}
+
+	// Light
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		light->pos = camera->getPosition();
 	}
 
 	// Do work

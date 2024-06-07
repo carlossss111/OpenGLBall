@@ -1,8 +1,9 @@
-#version 450 core
+#version 460 core
 
 layout (location = 0) in vec3 fPos;
 layout (location = 1) in vec3 fNor;
 layout (location = 2) in vec2 fTex;
+layout (location = 3) in vec4 fLightSpace;
 
 out vec4 fColour;
 
@@ -24,7 +25,37 @@ uniform vec3 cameraPos;
 uniform Material material;
 uniform Light light;
 
-vec3 calculateDirectionalLight(){
+uniform vec3 lightPos;
+uniform sampler2D depthMap;
+
+float calculateShadow() {
+	vec3 projCoords = fLightSpace.xyz / fLightSpace.w;
+	projCoords = projCoords * 0.5f + 0.5f;
+	float closestDepth = texture(depthMap, projCoords.xy).r;
+	float currentDepth = projCoords.z;
+
+	vec3 normal = normalize(fNor);
+	vec3 lightDir = normalize(lightPos - fPos);
+	float bias = max(0.05f * (1.f - dot(normal, lightDir)), 0.005f);
+
+	float shadow = 0.0f;
+	vec2 texelSize = 1.f / textureSize(depthMap, 0);
+	for (int x = -1; x <= 1; ++x){
+		for(int y = -1; y <= 1; ++y){
+			float pcfDepth = texture(depthMap, projCoords.xy + vec2(x,y) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.f : 0.f;
+		}
+	}
+	shadow /= 9.f;
+
+	if(projCoords.z > 1.f){
+		shadow = 0.f;
+	}
+
+	return shadow;
+}
+
+vec3 calculateDirectionalLight() {
 	// Ambient
 	vec3 ambient = light.ambient * texture(material.diffuse, fTex).rgb;
 
@@ -42,7 +73,11 @@ vec3 calculateDirectionalLight(){
 		float spec = pow(max(dot(viewDir, reflectDir), 0.f), material.shininess);
 		specular = light.specular * spec * texture(material.specular, fTex).rgb;
 	}
-	return ambient + diffuse + specular;
+
+	// Shadow
+	float shadow = calculateShadow();
+
+	return ambient + (1.f - shadow) * (diffuse + specular);
 }
 
 void main() {

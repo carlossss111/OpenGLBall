@@ -34,8 +34,4 @@ public:
 	}
 
 	AbstractModel* get(std::string tag) const; //nullable
-
-private:
-	void loadFromFile();
-	void loadProcedural();
 };

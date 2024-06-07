@@ -8,6 +8,8 @@
 #include "scene.h"
 #include "keyboard.h"
 #include "camera.h"
+#include "shadow.h"
+#include "light.h"
 
 #ifdef NVIDIA
 extern "C" {

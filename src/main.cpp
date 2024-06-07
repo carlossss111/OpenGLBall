@@ -16,15 +16,18 @@ int main(int argc, char** argv) {
 
     // Init Classes
     Shader shader("phong.vert", "phong.frag");
+    Shader depth("depth.vert", "depth.frag");
     Camera camera(glm::vec3(0, 0, 0), glm::vec2(45.f, 20.f));
+    Shadow shadow(2048, 2048);
+    Light light(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f));
 
     // Init Models
     Scene scene;
    
     // Render Loop
     while (!glfwWindowShouldClose(window)) {
-        Renderer::renderScene(&shader, camera, scene);
-        Input::processKeyboard(window, &camera);
+        Renderer::renderScene(&shader, &depth, camera, scene, shadow, light);
+        Input::processKeyboard(window, &camera, &light);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
