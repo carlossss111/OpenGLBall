@@ -15,9 +15,9 @@ set(HEADERS
 	lib/include
 	include/
 	include/render
-	include/objects
-	include/objects/procedural
-	include/objects/loaded
+	include/scene
+	include/scene/procedural
+	include/scene/loaded
 	include/input
 )
 
@@ -25,9 +25,9 @@ file(GLOB SOURCES
 	lib/include/GL/gl3w.c
 	src/*.cpp
 	src/render/*.cpp
-	src/objects/*.cpp
-	src/objects/procedural/*.cpp
-	src/objects/loaded/*.cpp
+	src/scene/*.cpp
+	src/scene/procedural/*.cpp
+	src/scene/loaded/*.cpp
 	src/input/*.cpp
 )
 
