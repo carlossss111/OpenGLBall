@@ -4,7 +4,7 @@
 #include <string>
 
 #include "render.h"
-#include "shader.h"
+#include "shader_manager.h"
 #include "scene.h"
 #include "keyboard.h"
 #include "camera.h"

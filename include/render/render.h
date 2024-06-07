@@ -11,7 +11,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "error.h"
-#include "shader.h"
+#include "shader_manager.h"
 #include "camera.h"
 #include "scene.h"
 #include "shadow.h"
@@ -26,5 +26,5 @@ namespace Renderer {
 	void sizeCallback(GLFWwindow* window, int w, int h);
 	GLFWwindow* initWindow();
 	void initGl();
-	void renderScene(Shader* mainShader, Shader* shadowShader, const Camera& camera, const Scene& scene, Shadow& shadow, Light& light);
+	void renderScene(const ShaderManager& shaderManager, const Camera& camera, const Scene& scene, Shadow& shadow, Light& light);
 }

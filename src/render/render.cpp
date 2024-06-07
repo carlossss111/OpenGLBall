@@ -46,7 +46,9 @@ void Renderer::initGl() {
     glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::renderScene(Shader* mainShader, Shader* shadowShader, const Camera& camera, const Scene& scene, Shadow& shadow, Light& light) {
+void Renderer::renderScene(const ShaderManager& shaderManager, const Camera& camera, const Scene& scene, Shadow& shadow, Light& light) {
+    Shader* mainShader = shaderManager.get(MAIN_SHADER);
+    Shader* shadowShader = shaderManager.get(SHADOW_SHADER);
     mainShader->use();
 
     // Set Lighting Uniforms

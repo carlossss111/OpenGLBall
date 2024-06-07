@@ -65,6 +65,10 @@ Shader::Shader(std::string vsFilename, std::string fsFilename) {
 
 }
 
+Shader::~Shader() {
+    glDeleteProgram(mProgramID);
+}
+
 void Shader::use() const {
     glUseProgram(mProgramID);
 }
