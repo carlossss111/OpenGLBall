@@ -5,6 +5,7 @@
 
 #include "shader.h"
 #include "scene.h"
+#include "window.h"
 
 class Shadow {
 private:
@@ -12,9 +13,11 @@ private:
 	GLuint mDepthMap = 0;
 	int mDepthMapWidth;
 	int mDepthMapHeight;
+	Shader* mShadowShader;
+
 public:
-	Shadow(int depthMapWidth, int depthMapHeight);
+	Shadow(Shader* shadowShader, int depthMapWidth, int depthMapHeight);
 	unsigned int getDepthMap();
 	glm::mat4 calcProjectedLightSpace(glm::vec3 lightPosition);
-	void createDepthMap(Shader* shader, glm::mat4 projectedLightSpace, const Scene* scene, int windowWidth, int windowHeight);
+	void createDepthMap(const Scene& scene, glm::mat4 projectedLightSpace, int windowWidth, int windowHeight);
 };

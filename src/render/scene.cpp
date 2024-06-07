@@ -22,3 +22,9 @@ AbstractModel* Scene::get(std::string targetTag) const {
     }
     return nullptr;
 }
+
+void Scene::drawAll(Shader* shader) const {
+    for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
+        (*model)->draw(shader);
+    }
+}

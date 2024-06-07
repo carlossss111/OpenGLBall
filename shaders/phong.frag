@@ -24,8 +24,6 @@ struct Light {
 uniform vec3 cameraPos;
 uniform Material material;
 uniform Light light;
-
-uniform vec3 lightPos;
 uniform sampler2D depthMap;
 
 float calculateShadow() {
@@ -35,7 +33,7 @@ float calculateShadow() {
 	float currentDepth = projCoords.z;
 
 	vec3 normal = normalize(fNor);
-	vec3 lightDir = normalize(lightPos - fPos);
+	vec3 lightDir = normalize(light.position - fPos);
 	float bias = max(0.05f * (1.f - dot(normal, lightDir)), 0.005f);
 
 	float shadow = 0.0f;

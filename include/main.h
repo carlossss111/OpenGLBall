@@ -11,6 +11,10 @@
 #include "shadow.h"
 #include "light.h"
 
+#ifdef DEBUG_GL
+#include "debug.h"
+#endif
+
 #ifdef NVIDIA
 extern "C" {
 	__declspec(dllexport) unsigned long NvOptimusEnablement = 1;

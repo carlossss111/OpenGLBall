@@ -4,6 +4,6 @@
 #include <string>
 #include <GL/gl3w.h>
 
-namespace Renderer {
+namespace PreRender {
 	GLuint createTexture(std::string filename, bool withLinearFilter = true);
 }

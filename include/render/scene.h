@@ -5,6 +5,8 @@
 #include <set>
 
 #include "scene_loader.h"
+#include "shader.h"
+
 #include "model.h"
 #include "cube.h"
 #include "sphere.h"
@@ -16,6 +18,9 @@ private:
 public:
 	Scene();
 	~Scene();
+
+	AbstractModel* get(std::string tag) const; //nullable
+	void drawAll(Shader* shader) const;
 
 	iterator begin() {
 		return mModelList.begin();
@@ -32,6 +37,4 @@ public:
 	const_iterator end() const {
 		return mModelList.end();
 	}
-
-	AbstractModel* get(std::string tag) const; //nullable
 };

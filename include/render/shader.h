@@ -11,6 +11,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "light.h"
+
 class Shader {
 private:
 	GLuint mProgramID;
@@ -31,4 +33,6 @@ public:
 	void setVec2(const std::string& name, glm::vec2 value);
 	void setVec3(const std::string& name, glm::vec3 value);
 	void setVec4(const std::string& name, glm::vec4 value);
+
+	void setLightUniforms(const Light& lightStruct);
 };

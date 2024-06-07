@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION    
 #include "stb/stb_image.h"
 
-GLuint Renderer::createTexture(std::string filename, bool linearFilter) {
+GLuint PreRender::createTexture(std::string filename, bool linearFilter) {
 	stbi_set_flip_vertically_on_load(true);
 	glEnable(GL_BLEND);
 

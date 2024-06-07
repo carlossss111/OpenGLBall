@@ -61,14 +61,14 @@ void Cube::init(std::string directoryPath, std::string diffuseFilePath, std::str
 
 	// Textures
 	Texture tex;
-	tex.id = Renderer::createTexture(directoryPath + "/" + diffuseFilePath);
+	tex.id = PreRender::createTexture(directoryPath + "/" + diffuseFilePath);
 	tex.path = diffuseFilePath;
 	tex.type = "diffuse";
 	textures.push_back(tex);
 
 	if (!specularFilePath.empty()) {
 		Texture tex2;
-		tex2.id = Renderer::createTexture(directoryPath + "/" + specularFilePath);
+		tex2.id = PreRender::createTexture(directoryPath + "/" + specularFilePath);
 		tex2.path = specularFilePath;
 		tex2.type = "specular";
 		textures.push_back(tex2);

@@ -121,7 +121,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat,
 		// Otherwise load the new texture.
 		if (!skip) {
 			Texture texture;
-			texture.id = Renderer::createTexture(mDirectory + "/" + pathStr);
+			texture.id = PreRender::createTexture(mDirectory + "/" + pathStr);
 			texture.type = typeName;
 			texture.path = pathStr;
 			textures.push_back(texture);
