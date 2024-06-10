@@ -5,7 +5,7 @@
 ##############################
 # Main Settings
 set(PROJECT_NAME "Graphics")
-set(TARGET_GPU "NVIDIA")
+set(TARGET_GPU "INTEL")
 set(DEFAULT_WINDOW_WIDTH 640)
 set(DEFAULT_WINDOW_HEIGHT 480)
 set(MSAA_X 2)
@@ -105,7 +105,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
 # Definitions
 add_compile_definitions(
-	# Select NONE|NVIDIA|AMD depending on the system's discrete GPU
+	# Select INTEL|NVIDIA|AMD depending on the system's discrete GPU
 	${TARGET_GPU}
 
 	# Add directory definitions

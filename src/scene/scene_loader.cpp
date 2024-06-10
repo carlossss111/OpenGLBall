@@ -40,8 +40,8 @@ int SceneLoader::parse(std::string path) {
 
 	// Read char by char
 	char c;
-	SceneLoader::Mode mode = NONE;
-	SceneLoader::StrType strType = SELECTOR;
+	Mode mode = NONE;
+	StrType strType = SELECTOR;
 	PreloadedModel premodel;
 	bool comment = false;
 
