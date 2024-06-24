@@ -29,4 +29,5 @@ Libraries are built from source in `lib/`.
 * khr-platform-67a3e0 Types and Definitions
 * stb-image-2.29 Image Reader
 * assimp-5.4.1 Model & Mesh Loader
+* physx-5.4.0 Nvidia Physics Engine
 OpenGL drivers are required for the target GPU.
