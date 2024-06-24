@@ -6,7 +6,7 @@
 #include <GL/gl3w.h>
 #include <glm/glm.hpp>
 
-#include "shader.h"
+#include "render/shader.h"
 
 struct Vertex {
 	glm::vec3 pos;

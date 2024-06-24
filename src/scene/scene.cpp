@@ -1,4 +1,4 @@
-#include "scene.h"
+#include "scene/scene.h"
 
 Scene::Scene() {
     SceneLoader loader(LEVEL_DIR, "one.level", MODEL_DIR);

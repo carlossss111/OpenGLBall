@@ -6,9 +6,10 @@
 #include <cstdio>
 #include <glm/glm.hpp>
 
-#include "shader.h"
-#include "mesh.h"
-#include "texture.h"
+#include "render/shader.h"
+
+#include "scene/mesh.h"
+#include "scene/texture.h"
 
 class AbstractModel {
 protected:

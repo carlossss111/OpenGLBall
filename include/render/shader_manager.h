@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#include "shader.h"
+#include "render/shader.h"
 
 #define MAIN_SHADER "main"
 #define SHADOW_SHADER "shadow"

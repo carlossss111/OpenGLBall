@@ -1,7 +1,7 @@
 #pragma once
 
-#include "abstract_model.h"
-#include "mesh.h"
+#include "scene/abstract_model.h"
+#include "scene/mesh.h"
 
 class Cube : public AbstractModel {
 private:

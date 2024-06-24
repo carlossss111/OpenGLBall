@@ -11,7 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "light.h"
+#include "render/light.h"
 
 class Shader {
 private:

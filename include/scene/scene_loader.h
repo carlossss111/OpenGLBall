@@ -9,10 +9,10 @@
 #include <map>
 #include <set>
 
-#include "model.h"
+#include "scene/loaded/model.h"
 
-#include "cube.h"
-#include "sphere.h"
+#include "scene/procedural/cube.h"
+#include "scene/procedural/sphere.h"
 
 /*
 

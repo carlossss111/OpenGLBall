@@ -1,4 +1,4 @@
-#include "mesh.h"
+#include "scene/mesh.h"
 
 Vertex Mesh::initVertex(glm::vec3 pos, glm::vec3 nor, glm::vec2 tex) {
     Vertex vert;

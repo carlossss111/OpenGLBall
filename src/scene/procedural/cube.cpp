@@ -1,4 +1,4 @@
-#include "cube.h"
+#include "scene/procedural/cube.h"
 
 void Cube::init(std::string directoryPath, std::string diffuseFilePath, std::string specularFilePath) {
 	std::vector<Vertex> verts;

@@ -1,4 +1,4 @@
-#include "sphere.h"
+#include "scene/procedural/sphere.h"
 
 Sphere::Sphere(std::string directoryPath, std::string filePath) {
     // A sphere can be defined with triangles.

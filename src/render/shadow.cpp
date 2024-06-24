@@ -1,4 +1,4 @@
-#include "shadow.h"
+#include "render/shadow.h"
 
 Shadow::Shadow(Shader* shadowShader, int depthMapWidth, int depthMapHeight)
 	: mShadowShader(shadowShader), mDepthMapWidth(depthMapWidth), mDepthMapHeight(depthMapHeight) {

@@ -1,4 +1,4 @@
-#include "window.h"
+#include "render/window.h"
 
 GLFWwindow* Window::initGlfw() {
     GLFWwindow* window;

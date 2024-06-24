@@ -1,8 +1,8 @@
 #ifdef DEBUG_GL
 #pragma once
 
-#include "render.h"
-#include "scene.h"
+#include "render/render.h"
+#include "scene/scene.h"
 
 namespace Debug {
     void onLoop(Renderer* renderer, Scene* scene);

@@ -1,4 +1,4 @@
-#include "abstract_model.h"
+#include "scene/abstract_model.h"
 
 void AbstractModel::positionRotateScale(Shader* shader) const {
 	// Positioning using the model matrix

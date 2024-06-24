@@ -1,4 +1,4 @@
-#include "model.h"
+#include "scene/loaded/model.h"
 
 Model::Model(const char* directoryPath, std::string filePath) {
 	std::string path = std::string(directoryPath) + filePath;

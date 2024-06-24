@@ -9,14 +9,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "window.h"
-#include "error.h"
-#include "shader_manager.h"
-#include "camera.h"
-#include "scene.h"
-#include "shadow.h"
-#include "light.h"
-#include "abstract_model.h"
+#include "render/window.h"
+#include "render/error.h"
+#include "render/shader_manager.h"
+#include "render/shadow.h"
+#include "render/light.h"
+
+#include "input/camera.h"
+
+#include "scene/scene.h"
+#include "scene/abstract_model.h"
 
 namespace PreRender {
 	void initGl();

@@ -4,12 +4,8 @@
 #include <list>
 #include <set>
 
-#include "scene_loader.h"
-#include "shader.h"
-
-#include "model.h"
-#include "cube.h"
-#include "sphere.h"
+#include "render/shader.h"
+#include "scene/scene_loader.h"
 
 class Scene : public std::list<AbstractModel*> {
 private:

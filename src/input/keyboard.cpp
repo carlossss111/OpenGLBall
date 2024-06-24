@@ -1,4 +1,4 @@
-#include "keyboard.h"
+#include "input/keyboard.h"
 
 void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light) {
 	glm::vec2 rotOffset = glm::vec2(0.f, 0.f);

@@ -3,9 +3,10 @@
 #include <GL/gl3w.h>
 #include <glm/glm.hpp>
 
-#include "shader.h"
-#include "scene.h"
-#include "window.h"
+#include "render/shader.h"
+#include "render/window.h"
+
+#include "scene/scene.h"
 
 class Shadow {
 private:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "abstract_model.h"
+#include "scene/abstract_model.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

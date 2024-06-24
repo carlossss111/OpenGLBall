@@ -3,13 +3,15 @@
 #include <cstdio>
 #include <string>
 
-#include "render.h"
-#include "shader_manager.h"
-#include "scene.h"
-#include "keyboard.h"
-#include "camera.h"
-#include "shadow.h"
-#include "light.h"
+#include "render/render.h"
+#include "render/shader_manager.h"
+#include "render/shadow.h"
+#include "render/light.h"
+
+#include "scene/scene.h"
+
+#include "input/keyboard.h"
+#include "input/camera.h"
 
 #ifdef DEBUG_GL
 #include "debug.h"
