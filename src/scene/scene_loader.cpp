@@ -9,8 +9,8 @@ SceneLoader::SceneLoader(std::string levelDir, std::string levelName, std::strin
 
 // Read a word to a string
 std::string readWord(FILE* fp, char& c) {
-	fseek(fp, -1, SEEK_CUR);
 	std::string word;
+	word += c;
 
 	// Read word until delimiter
 	while ((c = fgetc(fp)) != EOF) {
