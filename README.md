@@ -5,8 +5,8 @@ The level should tilt to roll the ball, like the game Super Monkey Ball.
 It would be cool to add PBR and point shadows and stuff too. Let's see how it goes.
 
 ## Compiling
-The project is compiled with CMake version >= 3.22.
-The executable will be built as `${project_root}/build/Graphics`.
+The project is organised with CMake version >= 3.22. It can be compiled with gcc or msvc.
+The executable will be built as `${project_root}/build/Graphics[.exe]`.
 
 ### Windows
 Open in Visual Studio 2022 and press F7 ('Build All'). 
@@ -15,7 +15,7 @@ Open in Visual Studio 2022 and press F7 ('Build All').
 ```
 mkdir build && cd build
 cmake ..
-make
+make -j 8 
 ```
 
 ## Usage
