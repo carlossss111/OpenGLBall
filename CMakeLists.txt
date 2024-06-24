@@ -5,7 +5,7 @@
 ##############################
 # Main Settings
 set(PROJECT_NAME "Graphics")
-set(TARGET_GPU "INTEL")
+set(TARGET_GPU "HYBRID")
 set(DEFAULT_WINDOW_WIDTH 640)
 set(DEFAULT_WINDOW_HEIGHT 480)
 set(MSAA_X 2)

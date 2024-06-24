@@ -6,9 +6,10 @@ It would be cool to add PBR and point shadows and stuff too. Let's see how it go
 
 ## Compiling
 The project is compiled with CMake version >= 3.22.
+The executable will be built as `${project_root}/build/Graphics`.
+
 ### Windows
-* Open in Visual Studio 2022 and press F7 ('Build All'). 
-* The executable will be found in `out/build/`.
+Open in Visual Studio 2022 and press F7 ('Build All'). 
 
 ### Linux
 ```
@@ -16,7 +17,6 @@ mkdir build && cd build
 cmake ..
 make
 ```
-* The executable will be found in `build/`.
 
 ## Usage
 None so far. WIP.
