@@ -11,9 +11,15 @@ int main(int argc, char** argv) {
 
     // Scene Init
     Scene scene;
+
+    // Physics Init
+    Physics physics(scene);
    
     // Render Loop
     while (!glfwWindowShouldClose(window)) {
+        //Simulate physics
+        physics.simulate(scene);
+
         //Scene Renderering and input
         renderer.renderScene(scene);
         Input::processKeyboard(window, renderer.getCamera(), renderer.getLight());

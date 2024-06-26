@@ -28,8 +28,11 @@ public:
 	virtual void draw(Shader* shader) const;
 
 	virtual void setPosition(glm::vec3);
+	virtual void setPosition(float, float, float);
 	virtual void setRotation(glm::vec3);
+	virtual void setRotation(float, float, float);
 	virtual void setScale(glm::vec3);
+	virtual void setScale(float, float, float);
 	virtual void addPosition(glm::vec3);
 	virtual void addRotation(glm::vec3);
 	virtual void addScale(glm::vec3);
@@ -39,6 +42,7 @@ public:
 
 	virtual void addTag(std::string);
 	virtual void removeTag(std::string);
+	virtual bool hasTag(std::string);
 	virtual std::set<std::string> getTags();
 
 protected:

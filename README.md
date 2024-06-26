@@ -8,8 +8,10 @@ It would be cool to add PBR and point shadows and stuff too. Let's see how it go
 The project is organised with CMake version >= 3.22. It can be compiled with gcc or msvc.
 The executable will be built as `${project_root}/build/Graphics[.exe]`.
 
+The code primarily developed on a Linux system and is occasionally tested on a Windows VM.
+
 ### Windows
-Open in Visual Studio 2022 and press F7 ('Build All'). 
+Open in Visual Studio 2022 with the C++ extension installed and press F7 ('Build All'). 
 
 ### Linux
 ```
@@ -18,8 +20,13 @@ cmake ..
 make -j 8 
 ```
 
-## Usage
-None so far. WIP.
+## Recent Progress
+Very work-in-progress currently! Demo coming soon TM.
+* Draws procedural and loaded models to the screen.
+* Level editor.
+* Lighting, Shadows, Camera.
+* Physics with ball and plane.
+
 
 ## Libraries
 Libraries are built from source in `lib/`.
@@ -30,4 +37,5 @@ Libraries are built from source in `lib/`.
 * stb-image-2.29 Image Reader
 * assimp-5.4.1 Model & Mesh Loader
 * physx-5.4.0 Nvidia Physics Engine
-OpenGL drivers are required for the target GPU.
+
+OpenGL drivers are also required, they are probably already installed.

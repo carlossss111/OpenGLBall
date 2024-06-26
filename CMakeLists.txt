@@ -46,6 +46,7 @@ if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 		#DEBUG_CAMERA
 		#DEBUG_LINES
 		DEBUG_GL
+		DEBUG_PHYSX
 	)
 endif()
 
@@ -99,7 +100,13 @@ endif()
 set(PHYSX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib/physx-5.4.0)
 set(PHYSX_ROOT_DIR ${PHYSX_PATH} ) #This is needed for $ENV{PHYSX_PATH}/compiler/public/CMakeLists.txt
 set(PHYSX_INCLUDE_DIRS {PHYSX_PATH}/include/ {PHYSX_PATH}/../pxshared/include/ )
-set(PHYSX_LIBRARIES PhysX)
+set(PHYSX_LIBRARIES 
+	PhysX
+	PhysXCommon
+	PhysXFoundation
+	PhysXCooking
+	PhysXExtensions
+)
 
 set(PX_BUILDSNIPPETS OFF CACHE BOOL "Generate the snippets")
 set(PX_BUILDPUBLICSAMPLES OFF CACHE BOOL "Generate the samples projects")

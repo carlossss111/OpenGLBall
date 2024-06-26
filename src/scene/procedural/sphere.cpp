@@ -89,3 +89,7 @@ Sphere::Sphere(std::string directoryPath, std::string filePath,
 	scl = scale;
     mTags = tags;
 }
+
+float Sphere::getRadius(){
+    return mRadius;
+}

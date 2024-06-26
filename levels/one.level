@@ -1,23 +1,21 @@
 !Models
 
 # ===  Modelled  ===
-#Name				Model path
-White_Oak			white_oak/white_oak.obj
-Backpack			backpack/backpack.obj
+#Name               Model path
+White_Oak           white_oak/white_oak.obj
+Backpack            backpack/backpack.obj
 
 # === Procedural === 
-#Name				Texture Path					C++ Object
-Crate				cube/container.png				Cube
-Floor				cube/checkers.png				CheckeredCube
-Ball				sphere/sphere.bmp				Sphere
+#Name               Texture Path                    C++ Object
+Crate               cube/container.png              Cube
+Floor               cube/checkers.png               CheckeredCube
+Ball                sphere/sphere.bmp               Sphere
 
 !Level
 
 # ===   Level    ===
-#Name				Position		Rotation		Scale					Tags
-n:White_Oak			p:2.5, -0.5,0	r:0,45,0	s:0.005,0.005,0.005		
-n:White_Oak			p:-2.5,-0.5,0					s:0.005,0.005,0.005
-#n:Backpack			p:0,-0.2,1.2	r:0,20,0		s:0.2,0.2,0.2			t:{debug}
-n:Ball				p:0,1,0			r:80,0,45
-n:Floor				p:0,-0.5,0						s:14,0.005,14
-n:Crate
+#Name               Position        Rotation        Scale                   Tags
+n:White_Oak         p:2.5, 0,0      r:0,45,0        s:0.005,0.005,0.005
+n:White_Oak         p:-2.5,0,0                      s:0.005,0.005,0.005
+n:Ball              p:0,10,0        r:80,0,45                               t:{player}
+n:Floor             p:0,-0.5,0                      s:14,0.005,14           t:{base}

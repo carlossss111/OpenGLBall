@@ -13,6 +13,8 @@
 #include "input/keyboard.h"
 #include "input/camera.h"
 
+#include "physics/physics.h"
+
 #ifdef DEBUG_GL
 #include "debug.h"
 #endif

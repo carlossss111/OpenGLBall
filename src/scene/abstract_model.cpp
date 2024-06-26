@@ -24,12 +24,24 @@ void AbstractModel::setPosition(glm::vec3 posIn) {
 	pos = posIn;
 }
 
+void AbstractModel::setPosition(float x, float y, float z) {
+	setPosition(glm::vec3(x,y,z));
+}
+
 void AbstractModel::setRotation(glm::vec3 rotIn) {
 	rot = rotIn;
 }
 
+void AbstractModel::setRotation(float x, float y, float z) {
+	setRotation(glm::vec3(x,y,z));
+}
+
 void AbstractModel::setScale(glm::vec3 sclIn) {
 	scl = sclIn;
+}
+
+void AbstractModel::setScale(float x, float y, float z) {
+	setScale(glm::vec3(x,y,z));
 }
 
 void AbstractModel::addPosition(glm::vec3 posIn) {
@@ -62,6 +74,10 @@ void AbstractModel::addTag(std::string tag) {
 
 void AbstractModel::removeTag(std::string tag) {
 	mTags.erase(tag);
+}
+
+bool AbstractModel::hasTag(std::string tag) {
+	return mTags.contains(tag);
 }
 
 std::set<std::string> AbstractModel::getTags() {
