@@ -1,7 +1,8 @@
 #include "input/keyboard.h"
 
-void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light) {
+void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light, Physics* physics) {
 	glm::vec2 rotOffset = glm::vec2(0.f, 0.f);
+	glm::vec3 tiltOffset = glm::vec3(0.f, 0.f, 0.f);
 	bool camChanged = false;
 
 	// Exit
@@ -31,6 +32,20 @@ void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light) {
 		camChanged = true;
 	}
 
+	// Board tilt
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		tiltOffset.x += 1.f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		tiltOffset.z += 1.f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		tiltOffset.x += -1.f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		tiltOffset.z += -1.f;
+	}
+
 	// Zoom or move camera up/down
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
 		camera->addDistance(-0.1f);
@@ -51,4 +66,6 @@ void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light) {
 	if (camChanged) {
 		camera->moveAndOrientCamera(glm::vec3(0.f, 0.f, 0.f), rotOffset);
 	}
+	
+	physics->tilt(tiltOffset.x, tiltOffset.y, tiltOffset.z);
 }

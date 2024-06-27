@@ -31,7 +31,7 @@ Renderer::Renderer() :
     mCamera(Camera(glm::vec3(0, 0, 0), glm::vec2(45.f, 20.f))),
     mShadow(Shadow(mShaderManager.get(SHADOW_SHADER), 2048, 2048)),
     mLight(Light(
-        glm::vec3(1.2f, 1.0f, 2.0f),
+        glm::vec3(1.2f, 10.0f, 2.0f),
         glm::vec3(0.2f, 0.2f, 0.2f),
         glm::vec3(0.5f, 0.5f, 0.5f),
         glm::vec3(1.0f, 1.0f, 1.0f))

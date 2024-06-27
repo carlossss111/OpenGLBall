@@ -47,6 +47,7 @@ if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 		#DEBUG_LINES
 		DEBUG_GL
 		DEBUG_PHYSX
+		DEBUG_TILT
 	)
 endif()
 

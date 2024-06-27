@@ -60,15 +60,15 @@ void Physics::initPlayerPhysics(Sphere* model){
     physx::PxMaterial* material = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
     physx::PxShape* sphereShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
     
-    mPlayerDebug = mPhysics->createRigidDynamic(
+    mPlayerRB = mPhysics->createRigidDynamic(
         physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPosition()))
     );
-    mPlayerDebug->attachShape(*sphereShape);
+    mPlayerRB->attachShape(*sphereShape);
 
     sphereShape->release();
     material->release();
 
-    mPhysicsScene->addActor(*mPlayerDebug);
+    mPhysicsScene->addActor(*mPlayerRB);
 }
 
 void Physics::initBasePhysics(AbstractModel* model){
@@ -77,18 +77,18 @@ void Physics::initBasePhysics(AbstractModel* model){
     physx::PxMaterial* material = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
     physx::PxShape* boxShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
 
-    mBaseDebug = mPhysics->createRigidDynamic(
+    mBaseRB = mPhysics->createRigidDynamic(
         physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPosition()))
     );
-    mBaseDebug->attachShape(*boxShape);
+    mBaseRB->attachShape(*boxShape);
 
     // Remove gravity and set as kinematic target
-    mBaseDebug->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
+    mBaseRB->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
 
     boxShape->release();
     material->release();
 
-    mPhysicsScene->addActor(*mBaseDebug);
+    mPhysicsScene->addActor(*mBaseRB);
 }
 
 void Physics::simulate(Scene& renderScene){
@@ -97,17 +97,9 @@ void Physics::simulate(Scene& renderScene){
     mPhysicsScene->simulate(1.0f/300.0f);
 	mPhysicsScene->fetchResults(true);
 
-    // Move renderable models in the scene
-    physx::PxTransform playerTransform = mPlayerDebug->getGlobalPose();
-    physx::PxTransform baseTransform = mBaseDebug->getGlobalPose();
-
-    // Rotation uses quaternions, position uses the vectors
-    static float yaw = 0.f;
-    if(yaw < 40.f)
-        yaw += 0.0005f;
-    physx::PxQuat yawQuat = PhysicsUtil::eulerToQuaternion(physx::PxVec3(0.f, 0.f, yaw));
-    mBaseDebug->setKinematicTarget(physx::PxTransform(yawQuat)); // Movement or rotation
-
+    // Rendering Update
+    physx::PxTransform playerTransform = mPlayerRB->getGlobalPose();
+    physx::PxTransform baseTransform = mBaseRB->getGlobalPose();
     AbstractModel* model;
     if(model = renderScene.get("player")){
         physx::PxVec3 pos = playerTransform.p;
@@ -121,4 +113,71 @@ void Physics::simulate(Scene& renderScene){
         physx::PxVec3 euler = PhysicsUtil::quaternionToEuler(baseTransform.q);
         model->setRotation(euler.x, euler.y, euler.z);
     }
+}
+
+void Physics::tilt(float addedRoll, float addedPitch, float addedYaw){
+    static const float maxRoll = PhysicsUtil::degreeToRadian(20.f);
+    static const float maxPitch = PhysicsUtil::degreeToRadian(20.f);
+    static const float maxYaw = PhysicsUtil::degreeToRadian(20.f);
+    static const float tiltSpeed = 0.01f;
+    static const float untiltSpeed = 0.005f;
+    static physx::PxVec3 targetTilt = physx::PxVec3(0.f, 0.f, 0.f);
+
+    // Calculate next roll target
+    float nextRoll = 0.f;
+    if(addedRoll != 0.f){
+        // When pressed, tilt.
+        nextRoll = targetTilt.x + addedRoll * tiltSpeed;
+    }
+    else{
+        // Stop jitteriness if basically horizontal
+        if(-untiltSpeed < targetTilt.x && targetTilt.x < untiltSpeed){
+            nextRoll = 0.f;
+        }
+        // Gradually return to the horizontal when not pressed
+        else if(targetTilt.x > untiltSpeed){
+            nextRoll = targetTilt.x - 1.f * untiltSpeed;
+        }
+        else if(targetTilt.x < -untiltSpeed){
+            nextRoll = targetTilt.x + 1.f * untiltSpeed;
+        }
+    }
+
+    // Calculate next yaw target
+    float nextYaw = 0.f;
+    if(addedYaw != 0.f){
+        // When pressed, tilt.
+        nextYaw = targetTilt.z + addedYaw * tiltSpeed;
+    }
+    else{
+        // Stop jitteriness if basically horizontal
+        if(-untiltSpeed < targetTilt.z && targetTilt.z < untiltSpeed){
+            nextYaw = 0.f;
+        }
+        // Gradually return to the horizontal when not pressed
+        else if(targetTilt.z > untiltSpeed){
+            nextYaw = targetTilt.z - 1.f * untiltSpeed;
+        }
+        else if(targetTilt.z < -untiltSpeed){
+            nextYaw = targetTilt.z + 1.f * untiltSpeed;
+        }
+    }
+
+#ifdef DEBUG_TILT
+    printf("roll:%.2f, pitch:%.2f, yaw:%.2f\n", targetTilt.x, targetTilt.y, targetTilt.z);
+#endif
+
+    // Set next rotation if in bounds
+    if(-maxRoll < nextRoll && nextRoll < maxRoll){
+        targetTilt.x = nextRoll;
+    }
+    if(-maxYaw < nextYaw && nextYaw < maxYaw){
+        targetTilt.z = nextYaw;
+    }
+
+    // Update the physics engine
+    mBaseRB->setKinematicTarget(physx::PxTransform(
+        PhysicsUtil::eulerToQuaternion(targetTilt)
+    ));
+
 }

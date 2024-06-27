@@ -42,3 +42,11 @@ physx::PxVec3 PhysicsUtil::quaternionToEuler(physx::PxQuat q){
 physx::PxVec3 PhysicsUtil::glmToPxVec3(glm::vec3 vec){
     return physx::PxVec3(vec.x, vec.y, vec.z);
 }
+
+float PhysicsUtil::radianToDegree(float rad){
+    return (rad * 180.f) / M_PI;
+}
+
+float PhysicsUtil::degreeToRadian(float deg){
+    return (deg * M_PI) / 180.f;
+}

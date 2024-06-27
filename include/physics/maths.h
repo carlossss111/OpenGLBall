@@ -9,4 +9,6 @@ namespace PhysicsUtil{
     physx::PxQuat eulerToQuaternion(physx::PxVec3 eulerAngle);
     physx::PxVec3 quaternionToEuler(physx::PxQuat quaternion);
     physx::PxVec3 glmToPxVec3(glm::vec3 vec);
+    float radianToDegree(float rad);
+    float degreeToRadian(float deg);
 };
