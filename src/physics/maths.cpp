@@ -3,7 +3,6 @@
 // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 
 physx::PxQuat PhysicsUtil::eulerToQuaternion(physx::PxVec3 eulerAngle){
-
     float roll = eulerAngle.x, pitch = eulerAngle.y, yaw = eulerAngle.z;
     float cr = std::cos(roll * 0.5);
     float sr = std::sin(roll * 0.5);
@@ -21,22 +20,22 @@ physx::PxQuat PhysicsUtil::eulerToQuaternion(physx::PxVec3 eulerAngle){
 }
 
 physx::PxVec3 PhysicsUtil::quaternionToEuler(physx::PxQuat q){
-        // roll (x-axis rotation)
-        float sinr_cosp = 2.f * (q.w * q.x + q.y * q.z);
-        float cosr_cosp = 1.f - 2.f * (q.x * q.x + q.y * q.y);
-        float roll = std::atan2(sinr_cosp, cosr_cosp);
+    // roll (x-axis rotation)
+    float sinr_cosp = 2.f * (q.w * q.x + q.y * q.z);
+    float cosr_cosp = 1.f - 2.f * (q.x * q.x + q.y * q.y);
+    float roll = std::atan2(sinr_cosp, cosr_cosp);
 
-        // pitch (y-axis rotation)
-        float sinp = std::sqrt(1.f + 2.f * (q.w * q.y - q.x * q.z));
-        float cosp = std::sqrt(1.f - 2.f * (q.w * q.y - q.x * q.z));
-        float pitch = 2.f * std::atan2(sinp, cosp) - M_PI / 2.f;
+    // pitch (y-axis rotation)
+    float sinp = std::sqrt(1.f + 2.f * (q.w * q.y - q.x * q.z));
+    float cosp = std::sqrt(1.f - 2.f * (q.w * q.y - q.x * q.z));
+    float pitch = 2.f * std::atan2(sinp, cosp) - PI / 2.f;
 
-        // yaw (z-axis rotation)
-        float siny_cosp = 2.f * (q.w * q.z + q.x * q.y);
-        float cosy_cosp = 1.f - 2.f * (q.y * q.y + q.z * q.z);
-        float yaw = std::atan2(siny_cosp, cosy_cosp);
+    // yaw (z-axis rotation)
+    float siny_cosp = 2.f * (q.w * q.z + q.x * q.y);
+    float cosy_cosp = 1.f - 2.f * (q.y * q.y + q.z * q.z);
+    float yaw = std::atan2(siny_cosp, cosy_cosp);
 
-        return physx::PxVec3(roll, pitch, yaw);
+    return physx::PxVec3(roll, pitch, yaw);
 }
 
 physx::PxVec3 PhysicsUtil::glmToPxVec3(glm::vec3 vec){
@@ -44,9 +43,9 @@ physx::PxVec3 PhysicsUtil::glmToPxVec3(glm::vec3 vec){
 }
 
 float PhysicsUtil::radianToDegree(float rad){
-    return (rad * 180.f) / M_PI;
+    return (rad * 180.f) / PI;
 }
 
 float PhysicsUtil::degreeToRadian(float deg){
-    return (deg * M_PI) / 180.f;
+    return (deg * PI) / 180.f;
 }
