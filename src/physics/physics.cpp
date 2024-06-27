@@ -1,6 +1,7 @@
 #include "physics/physics.h"
 
-Physics::Physics(const Scene& renderScene) : 
+Physics::Physics(const float& deltaTime, const Scene& renderScene) : 
+    mDeltaTime(deltaTime),
     mDefaultErrorCallback(physx::PxDefaultErrorCallback()), 
     mDefaultAllocatorCallback(physx::PxDefaultAllocator()){
         
@@ -93,8 +94,7 @@ void Physics::initBasePhysics(AbstractModel* model){
 
 void Physics::simulate(Scene& renderScene){
     // Simulate
-	//mPhysicsScene->simulate(1.0f/60.0f);
-    mPhysicsScene->simulate(1.0f/300.0f);
+	mPhysicsScene->simulate(mDeltaTime);
 	mPhysicsScene->fetchResults(true);
 
     // Rendering Update

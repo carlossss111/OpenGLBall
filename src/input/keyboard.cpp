@@ -37,13 +37,13 @@ void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light, Ph
 		tiltOffset.x += 1.f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		tiltOffset.z += 1.f;
+		tiltOffset.z += -1.f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		tiltOffset.x += -1.f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		tiltOffset.z += -1.f;
+		tiltOffset.z += 1.f;
 	}
 
 	// Zoom or move camera up/down

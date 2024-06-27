@@ -1,5 +1,7 @@
 ﻿#include "main.h"
 
+float deltaTime = 0.f;
+
 // C++ Main Function
 int main(int argc, char** argv) {
     // Window Init
@@ -7,31 +9,27 @@ int main(int argc, char** argv) {
 
     // Renderer Init
     PreRender::initGl();
-    Renderer renderer;
+    Renderer renderer(deltaTime);
 
-    // Scene Init
+    // Scene & Physics Init
     Scene scene;
-
-    // Physics Init
-    Physics physics(scene);
+    Physics physics(deltaTime, scene);
    
     // Render Loop
     while (!glfwWindowShouldClose(window)) {
-        //Simulate physics
+        // Delta Time
+        updateDt(deltaTime);
+
+        // Simulate physics
         physics.simulate(scene);
 
-        //Scene Renderering and input
+        // Scene Renderering and input
         renderer.renderScene(scene);
         Input::processKeyboard(window, renderer.getCamera(), renderer.getLight(), &physics);
 
         // Glfw
         glfwSwapBuffers(window);
         glfwPollEvents();
-
-        // Debug functions for hotloading
-#ifdef DEBUG_GL
-        Debug::onLoop(&renderer, &scene);
-#endif
     }
 
     // Program Exit

@@ -13,6 +13,8 @@
 
 class Physics{
 private:
+    const float& mDeltaTime;
+
     physx::PxDefaultErrorCallback mDefaultErrorCallback;
     physx::PxDefaultAllocator mDefaultAllocatorCallback;
 
@@ -26,7 +28,7 @@ private:
     physx::PxRigidBody* mPlayerRB;
     physx::PxRigidDynamic* mBaseRB;
 public:
-    Physics(const Scene& renderScene);
+    Physics(const float& deltaTime, const Scene& renderScene);
     ~Physics();
     void simulate(Scene& renderScene);
     void tilt(float roll, float pitch, float yaw);// Todo: move into dedicated class

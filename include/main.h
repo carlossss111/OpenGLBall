@@ -30,3 +30,24 @@ extern "C" {
 	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 #endif
+
+#ifdef DEBUG_SLOWMOTION
+#define TIME_MOD 0.5f
+#else
+#define TIME_MOD 1.f
+#endif
+
+#ifndef DEBUG_FRAMERATE
+#define updateDt(deltaTime)                                 \
+    static float lastFrame = 0.f;                           \
+    float currentFrame = glfwGetTime();                     \
+    deltaTime = (currentFrame - lastFrame) * TIME_MOD;      \
+    lastFrame = currentFrame
+#else
+#define updateDt(deltaTime)                                 \
+    static float lastFrame = 0.f;                           \
+    float currentFrame = glfwGetTime();                     \
+    deltaTime = (currentFrame - lastFrame) * TIME_MOD;      \
+    lastFrame = currentFrame;                               \
+    printf("Delta: %f, FPS: %.0f\n", deltaTime, 1/deltaTime)
+#endif

@@ -26,13 +26,14 @@ namespace PreRender {
 
 class Renderer {
 private:
+	const float& mDeltaTime;
 	ShaderManager mShaderManager;
 	Camera mCamera;
 	Shadow mShadow;
 	Light mLight;
 
 public:
-	Renderer();
+	Renderer(const float& deltaTime);
 	void renderScene(const Scene& sceneRef);
 
 	Camera* getCamera();

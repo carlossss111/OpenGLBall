@@ -5,6 +5,8 @@
 
 class Camera {
 private:
+	const float& mDeltaTime;
+
 	glm::vec3 mPosition;
 	glm::vec3 mFront;
 	glm::vec3 mUp;
@@ -14,13 +16,13 @@ private:
 	float mYaw;
 	float mPitch;
 
-	const float mMovementSpeed = 1.f;
-	float mMouseSensitivity = 1.f;
-	float mCamDist = 2.f;
+	const float mMovementSpeed;
+	float mMouseSensitivity;
+	float mCamDist;
 
 public:
-	Camera();
-	Camera(glm::vec3 target, glm::vec2 rotation);
+	Camera(const float& deltaTime);
+	Camera(const float& deltaTime, glm::vec3 target, glm::vec2 rotation);
 
 	void setDistance(float dist);
 	void addDistance(float dist);
