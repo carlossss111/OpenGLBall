@@ -82,6 +82,10 @@ add_subdirectory(lib/glm)
 target_link_libraries(${PROJECT_NAME} glm::glm)
 
 # Compile ASSIMP with source
+if(${CMAKE_BUILD_TYPE} MATCHES "Release")
+	set(ASSIMP_WARNINGS_AS_ERRORS OFF)
+endif()
+set(ASSIMP_INSTALL OFF)
 set(ASSIMP_BUILD_TESTS OFF)
 add_subdirectory(lib/assimp-5.4.1)
 target_link_libraries(${PROJECT_NAME} assimp::assimp)

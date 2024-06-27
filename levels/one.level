@@ -17,5 +17,5 @@ Ball                sphere/sphere.bmp               Sphere
 #Name               Position        Rotation        Scale                   Tags
 n:White_Oak         p:2.5, 0,0      r:0,45,0        s:0.005,0.005,0.005
 n:White_Oak         p:-2.5,0,0                      s:0.005,0.005,0.005
-n:Ball              p:0,10,0        r:80,0,45                               t:{player}
+n:Ball              p:0,5,0         r:80,0,45                               t:{player}
 n:Floor             p:0,-0.5,0                      s:14,0.005,14           t:{base}

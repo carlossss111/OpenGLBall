@@ -5,6 +5,8 @@
 
 #include <PxPhysicsAPI.h>
 
+#include "physics/maths.h"
+
 #include "scene/scene.h"
 
 #define PHYSICS_RECORD_MEMORY_ALLOC true
@@ -21,7 +23,8 @@ private:
     physx::PxScene* mPhysicsScene;
 
     physx::PxRigidBody* mPlayerDebug;
-    physx::PxRigidStatic* mBaseDebug;
+    //physx::PxRigidStatic* mBaseDebug;
+    physx::PxRigidDynamic* mBaseDebug;
 
 public:
     Physics(const Scene& renderScene);

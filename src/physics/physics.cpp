@@ -37,13 +37,12 @@ Physics::Physics(const Scene& renderScene) :
 	mPhysicsScene = mPhysics->createScene(sceneDesc);
 
     // Check for player & base
-    for (auto model = renderScene.begin(); model != renderScene.end(); ++model) {
-        if((*model)->hasTag("player")){
-            initPlayerPhysics(dynamic_cast<Sphere*>(*model));
-        }
-        if((*model)->hasTag("base")){
-            initBasePhysics(*model);
-        }
+    AbstractModel* model;
+    if(model = renderScene.get("player")){
+        initPlayerPhysics(dynamic_cast<Sphere*>(model));
+    }
+    if(model = renderScene.get("base")){
+        initBasePhysics(model);
     }
 }
 
@@ -57,12 +56,12 @@ Physics::~Physics(){
 
 void Physics::initPlayerPhysics(Sphere* model){
     const physx::PxShapeFlags shapeFlags = physx::PxShapeFlag::eSCENE_QUERY_SHAPE | physx::PxShapeFlag::eSIMULATION_SHAPE;
-    const physx::PxSphereGeometry geometry(model->getRadius()); //TODO: change
+    const physx::PxSphereGeometry geometry(model->getRadius());
     physx::PxMaterial* material = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
     physx::PxShape* sphereShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
     
     mPlayerDebug = mPhysics->createRigidDynamic(
-        physx::PxTransform(physx::PxVec3(0.f, model->getPosition().y, 0.f))
+        physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPosition()))
     );
     mPlayerDebug->attachShape(*sphereShape);
 
@@ -74,17 +73,19 @@ void Physics::initPlayerPhysics(Sphere* model){
 
 void Physics::initBasePhysics(AbstractModel* model){
     const physx::PxShapeFlags shapeFlags = physx::PxShapeFlag::eSCENE_QUERY_SHAPE | physx::PxShapeFlag::eSIMULATION_SHAPE;
-    const physx::PxPlaneGeometry geometry; 
+    const physx::PxBoxGeometry geometry(model->getScale().x/2, model->getScale().y/2, model->getScale().z/2);
     physx::PxMaterial* material = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-    physx::PxShape* planeShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
-    
-    //mBaseDebug = mPhysics->createRigidStatic(
-    //    physx::PxTransformFromPlaneEquation(physx::PxPlane(physx::PxVec3(1.f, -0.5f, 1.f), 1.f))
-    //);
-    //mBaseDebug->attachShape(*planeShape);
-    mBaseDebug = physx::PxCreatePlane(*mPhysics, physx::PxPlane(0.f,1.f,0.f,0.f), *material);
+    physx::PxShape* boxShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
 
-    planeShape->release();
+    mBaseDebug = mPhysics->createRigidDynamic(
+        physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPosition()))
+    );
+    mBaseDebug->attachShape(*boxShape);
+
+    // Remove gravity and set as kinematic target
+    mBaseDebug->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
+
+    boxShape->release();
     material->release();
 
     mPhysicsScene->addActor(*mBaseDebug);
@@ -93,20 +94,31 @@ void Physics::initBasePhysics(AbstractModel* model){
 void Physics::simulate(Scene& renderScene){
     // Simulate
 	//mPhysicsScene->simulate(1.0f/60.0f);
-    mPhysicsScene->simulate(1.0f/600.0f);
+    mPhysicsScene->simulate(1.0f/300.0f);
 	mPhysicsScene->fetchResults(true);
 
     // Move renderable models in the scene
     physx::PxTransform playerTransform = mPlayerDebug->getGlobalPose();
     physx::PxTransform baseTransform = mBaseDebug->getGlobalPose();
-    for (auto model = renderScene.begin(); model != renderScene.end(); ++model) {
-        if((*model)->hasTag("player")){
-            (*model)->setPosition(playerTransform.p.x,playerTransform.p.y,playerTransform.p.z);
-        }
-        
-        //remove later, checks that the base is where we expect it to be
-        if((*model)->hasTag("base")){
-            (*model)->setPosition(baseTransform.p.x, baseTransform.p.y, baseTransform.p.z);
-        }
+
+    // Rotation uses quaternions, position uses the vectors
+    static float yaw = 0.f;
+    if(yaw < 40.f)
+        yaw += 0.0005f;
+    physx::PxQuat yawQuat = PhysicsUtil::eulerToQuaternion(physx::PxVec3(0.f, 0.f, yaw));
+    mBaseDebug->setKinematicTarget(physx::PxTransform(yawQuat)); // Movement or rotation
+
+    AbstractModel* model;
+    if(model = renderScene.get("player")){
+        physx::PxVec3 pos = playerTransform.p;
+        model->setPosition(pos.x, pos.y, pos.z);
+        physx::PxVec3 euler = PhysicsUtil::quaternionToEuler(playerTransform.q);
+        model->setRotation(euler.x, euler.y, euler.z);
+    }
+    if(model = renderScene.get("base")){
+        physx::PxVec3 pos = baseTransform.p;
+        model->setPosition(pos.x, pos.y, pos.z);
+        physx::PxVec3 euler = PhysicsUtil::quaternionToEuler(baseTransform.q);
+        model->setRotation(euler.x, euler.y, euler.z);
     }
 }
