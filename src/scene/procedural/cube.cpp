@@ -85,9 +85,9 @@ Cube::Cube(std::string directoryPath, std::string diffuseFilePath,
 	std::string specularFilePath,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale,
 	glm::vec2 repeatingTextures, std::set<std::string> tags){
-	pos = position;
-	rot = rotation;
-	scl = scale;
+	setPosition(position);
+	setRotation(rotation);
+	setScale(scale);
 	mTags = tags;
 	mTexW = repeatingTextures.x * scale.x;
 	mTexH = repeatingTextures.y * scale.z;

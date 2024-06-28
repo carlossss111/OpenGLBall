@@ -38,14 +38,38 @@ physx::PxVec3 PhysicsUtil::quaternionToEuler(physx::PxQuat q){
     return physx::PxVec3(roll, pitch, yaw);
 }
 
-physx::PxVec3 PhysicsUtil::glmToPxVec3(glm::vec3 vec){
-    return physx::PxVec3(vec.x, vec.y, vec.z);
-}
-
 float PhysicsUtil::radianToDegree(float rad){
     return (rad * 180.f) / PI;
 }
 
 float PhysicsUtil::degreeToRadian(float deg){
     return (deg * PI) / 180.f;
+}
+
+physx::PxVec3 PhysicsUtil::glmToPxVec3(glm::vec3 vec){
+    return physx::PxVec3(vec.x, vec.y, vec.z);
+}
+
+glm::mat4 PhysicsUtil::pxToGlmMat4(physx::PxMat44 nvMat){
+    return glm::mat4 {
+        nvMat.column0.x,
+        nvMat.column0.y,
+        nvMat.column0.z,
+        nvMat.column0.w,
+
+        nvMat.column1.x,
+        nvMat.column1.y,
+        nvMat.column1.z,
+        nvMat.column1.w,
+
+        nvMat.column2.x,
+        nvMat.column2.y,
+        nvMat.column2.z,
+        nvMat.column2.w,
+
+        nvMat.column3.x,
+        nvMat.column3.y,
+        nvMat.column3.z,
+        nvMat.column3.w
+    };
 }

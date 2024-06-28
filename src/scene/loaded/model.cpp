@@ -28,9 +28,9 @@ Model::Model(const char* directoryPath, std::string filePath,
 	std::set<std::string> tags) :
 	Model(directoryPath, filePath) {
 
-	pos = position;
-	rot = rotation;
-	scl = scale;
+	setPosition(position);
+	setRotation(rotation);
+	setScale(scale);
 	mTags = tags;
 }
 

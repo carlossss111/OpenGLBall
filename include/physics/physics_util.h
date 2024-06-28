@@ -10,7 +10,8 @@ namespace PhysicsUtil{
     constexpr float PI = glm::pi<float>();
     physx::PxQuat eulerToQuaternion(physx::PxVec3 eulerAngle);
     physx::PxVec3 quaternionToEuler(physx::PxQuat quaternion);
-    physx::PxVec3 glmToPxVec3(glm::vec3 vec);
     float radianToDegree(float rad);
     float degreeToRadian(float deg);
+    physx::PxVec3 glmToPxVec3(glm::vec3 vec);
+    glm::mat4 pxToGlmMat4(physx::PxMat44 matrix);
 };

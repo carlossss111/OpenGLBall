@@ -36,5 +36,5 @@ public:
 private:
     void initPlayerPhysics(Sphere* model);
     void initBasePhysics(AbstractModel* model);
-    void simulateTilt();
+    physx::PxMat44 simulateTilt();
 };
