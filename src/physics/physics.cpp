@@ -97,6 +97,9 @@ void Physics::simulate(Scene& renderScene){
 	mPhysicsScene->simulate(mDeltaTime);
 	mPhysicsScene->fetchResults(true);
 
+    // Tilt based on input or lack thereof
+    simulateTilt();
+
     // Rendering Update
     physx::PxTransform playerTransform = mPlayerRB->getGlobalPose();
     physx::PxTransform baseTransform = mBaseRB->getGlobalPose();
@@ -115,7 +118,11 @@ void Physics::simulate(Scene& renderScene){
     }
 }
 
-void Physics::tilt(float addedRoll, float addedPitch, float addedYaw){
+void Physics::addTilt(float addedRoll, float addedPitch, float addedYaw){
+    mAddedTilt = physx::PxVec3(addedRoll, addedPitch, addedYaw);
+}
+
+void Physics::simulateTilt(){
     static const float maxRoll = PhysicsUtil::degreeToRadian(20.f);
     static const float maxPitch = PhysicsUtil::degreeToRadian(20.f);
     static const float maxYaw = PhysicsUtil::degreeToRadian(20.f);
@@ -125,7 +132,8 @@ void Physics::tilt(float addedRoll, float addedPitch, float addedYaw){
 
     // Calculate next roll target
     float nextRoll = 0.f;
-    if(addedRoll != 0.f){
+    float addedRoll = mAddedTilt.x;
+    if(mAddedTilt.x != 0.f){
         // When pressed, tilt.
         nextRoll = targetTilt.x + addedRoll * tiltSpeed;
     }
@@ -145,6 +153,7 @@ void Physics::tilt(float addedRoll, float addedPitch, float addedYaw){
 
     // Calculate next yaw target
     float nextYaw = 0.f;
+    float addedYaw = mAddedTilt.z;
     if(addedYaw != 0.f){
         // When pressed, tilt.
         nextYaw = targetTilt.z + addedYaw * tiltSpeed;
@@ -180,4 +189,12 @@ void Physics::tilt(float addedRoll, float addedPitch, float addedYaw){
         PhysicsUtil::eulerToQuaternion(targetTilt)
     ));
 
+    // Reset tilt 
+    mAddedTilt = physx::PxVec3(0.f, 0.f, 0.f);
+}
+
+void Physics::reset() {
+    //TODO: temp, refactor
+    mPlayerRB->setGlobalPose(physx::PxTransform(physx::PxVec3(0.f, 5.f, 0.f)));
+    mPlayerRB->clearForce(physx::PxForceMode::eFORCE);
 }

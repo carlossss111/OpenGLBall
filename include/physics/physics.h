@@ -24,15 +24,17 @@ private:
     physx::PxDefaultCpuDispatcher* mDispatcher;
     physx::PxScene* mPhysicsScene;
 
-    // This part is temporary as a POC and should be refactored into other classes
     physx::PxRigidBody* mPlayerRB;
     physx::PxRigidDynamic* mBaseRB;
+    physx::PxVec3 mAddedTilt;
 public:
     Physics(const float& deltaTime, const Scene& renderScene);
     ~Physics();
     void simulate(Scene& renderScene);
-    void tilt(float roll, float pitch, float yaw);// Todo: move into dedicated class
+    void addTilt(float addedRoll, float addedPitch, float addedYaw);
+    void reset();
 private:
     void initPlayerPhysics(Sphere* model);
     void initBasePhysics(AbstractModel* model);
+    void simulateTilt();
 };
