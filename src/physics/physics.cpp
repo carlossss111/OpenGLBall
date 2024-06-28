@@ -122,18 +122,20 @@ void Physics::addTilt(float addedRoll, float addedPitch, float addedYaw){
     mAddedTilt = physx::PxVec3(addedRoll, addedPitch, addedYaw);
 }
 
-void Physics::simulateTilt(){
+physx::PxVec3T<float> calculateNextTiltAngle(physx::PxVec3 addedTilt){
     static const float maxRoll = PhysicsUtil::degreeToRadian(20.f);
-    static const float maxPitch = PhysicsUtil::degreeToRadian(20.f);
     static const float maxYaw = PhysicsUtil::degreeToRadian(20.f);
     static const float tiltSpeed = 0.01f;
     static const float untiltSpeed = 0.005f;
     static physx::PxVec3 targetTilt = physx::PxVec3(0.f, 0.f, 0.f);
 
-    // Calculate next roll target
+    /*
+    * Calculate the target roll angle for the next physics frame
+    * This works by adding/subtracting from the targetTilt which lives between frames.
+    */
     float nextRoll = 0.f;
-    float addedRoll = mAddedTilt.x;
-    if(mAddedTilt.x != 0.f){
+    float addedRoll = addedTilt.x;
+    if(addedTilt.x != 0.f){
         // When pressed, tilt.
         nextRoll = targetTilt.x + addedRoll * tiltSpeed;
     }
@@ -150,11 +152,16 @@ void Physics::simulateTilt(){
             nextRoll = targetTilt.x + 1.f * untiltSpeed;
         }
     }
+    if(-maxRoll < nextRoll && nextRoll < maxRoll){
+        targetTilt.x = nextRoll;
+    }
 
-    // Calculate next yaw target
+    /*
+    * Calculate the target yaw angle for the next physics frame, as above
+    */
     float nextYaw = 0.f;
-    float addedYaw = mAddedTilt.z;
-    if(addedYaw != 0.f){
+    float addedYaw = addedTilt.z;
+    if(addedTilt.z != 0.f){
         // When pressed, tilt.
         nextYaw = targetTilt.z + addedYaw * tiltSpeed;
     }
@@ -171,30 +178,66 @@ void Physics::simulateTilt(){
             nextYaw = targetTilt.z + 1.f * untiltSpeed;
         }
     }
-
-#ifdef DEBUG_TILT
-    printf("roll:%.2f, pitch:%.2f, yaw:%.2f\n", targetTilt.x, targetTilt.y, targetTilt.z);
-#endif
-
-    // Set next rotation if in bounds
-    if(-maxRoll < nextRoll && nextRoll < maxRoll){
-        targetTilt.x = nextRoll;
-    }
     if(-maxYaw < nextYaw && nextYaw < maxYaw){
         targetTilt.z = nextYaw;
     }
 
-    // Update the physics engine
+#ifdef DEBUG_TILT
+    printf("roll:%.2f, pitch:%.2f, yaw:%.2f\n", 
+    PhysicsUtil::radianToDegree(targetTilt.x), 
+    PhysicsUtil::radianToDegree(targetTilt.y), 
+    PhysicsUtil::radianToDegree(targetTilt.z));
+#endif
+
+    return physx::PxVec3(nextRoll, 0.f, nextYaw);
+}
+
+physx::PxMat44T<float> calculateTiltTransformation(physx::PxVec3 pivotPoint, physx::PxVec3 nextAngle) {
+    physx::PxMat44 pivotTranslationMatrix   = physx::PxMat44(physx::PxIdentity);
+    physx::PxMat44 rollRotationMatrix       = physx::PxMat44(physx::PxIdentity);
+    physx::PxMat44 yawRotationMatrix        = physx::PxMat44(physx::PxIdentity);
+    physx::PxMat44 originTranslationMatrix  = physx::PxMat44(physx::PxIdentity);
+    
+    // Translate to centre on the pivot
+    pivotTranslationMatrix.column3 = physx::PxVec4(pivotPoint.x, 0.f, pivotPoint.z, 1.f);
+
+    // Rotate with the rotation formula
+    float nextRollAngle = nextAngle.x;
+    rollRotationMatrix.column1.y =  std::cos(nextRollAngle);
+    rollRotationMatrix.column1.z = -std::sin(nextRollAngle);
+    rollRotationMatrix.column2.y =  std::sin(nextRollAngle);
+    rollRotationMatrix.column2.z =  std::cos(nextRollAngle);
+
+    float nextYawAngle = nextAngle.z;
+    yawRotationMatrix.column0.x =  std::cos(nextYawAngle);
+    yawRotationMatrix.column0.y = -std::sin(nextYawAngle);
+    yawRotationMatrix.column1.x =  std::sin(nextYawAngle);
+    yawRotationMatrix.column1.y =  std::cos(nextYawAngle);
+
+    // Translate back to the world origin
+    originTranslationMatrix.column3 = physx::PxVec4(-pivotPoint.x, 0.f, -pivotPoint.z, 1.f);
+
+    // Combine each transformation in this order
+    return pivotTranslationMatrix * rollRotationMatrix * yawRotationMatrix * originTranslationMatrix;
+}
+
+void Physics::simulateTilt(){
+    // Calculate angle to tilt based on input (or lack of input)
+    physx::PxVec3 nextTiltAngle = calculateNextTiltAngle(mAddedTilt);
+
+    // Calculate transformation matrix
+    physx::PxMat44 tiltMatrix = calculateTiltTransformation(mPlayerRB->getGlobalPose().p, nextTiltAngle);
+
+    // Apply transformation matrix
     mBaseRB->setKinematicTarget(physx::PxTransform(
-        PhysicsUtil::eulerToQuaternion(targetTilt)
+        tiltMatrix
     ));
 
-    // Reset tilt 
+    // Clear user input
     mAddedTilt = physx::PxVec3(0.f, 0.f, 0.f);
 }
 
 void Physics::reset() {
-    //TODO: temp, refactor
     mPlayerRB->setGlobalPose(physx::PxTransform(physx::PxVec3(0.f, 5.f, 0.f)));
     mPlayerRB->clearForce(physx::PxForceMode::eFORCE);
 }

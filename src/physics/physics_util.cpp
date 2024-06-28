@@ -1,4 +1,4 @@
-#include "physics/maths.h"
+#include "physics/physics_util.h"
 
 // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 

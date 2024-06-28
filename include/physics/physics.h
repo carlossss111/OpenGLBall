@@ -5,7 +5,7 @@
 
 #include <PxPhysicsAPI.h>
 
-#include "physics/maths.h"
+#include "physics/physics_util.h"
 
 #include "scene/scene.h"
 
