@@ -107,14 +107,12 @@ void Physics::simulate(Scene& renderScene){
     if(model = renderScene.get("player")){
         physx::PxVec3 pos = playerTransform.p;
         model->setPosition(pos.x, pos.y, pos.z);
-        physx::PxVec3 euler = PhysicsUtil::quaternionToEuler(playerTransform.q);
-        model->setRotation(euler.x, euler.y, euler.z);
+        physx::PxMat44 rotationMat = PhysicsUtil::quaternionToMatrix(playerTransform.q);
+        model->setRotation(PhysicsUtil::pxToGlmMat4(rotationMat));
     }
     if(model = renderScene.get("base")){
         model->setPosition(0.f, 0.f, 0.f);
-        glm::mat4 mat;
-        mat = PhysicsUtil::pxToGlmMat4(tiltMatrix);;
-        model->setRotation(mat);
+        model->setRotation(PhysicsUtil::pxToGlmMat4(tiltMatrix));
     }
 }
 
@@ -123,8 +121,8 @@ void Physics::addTilt(float addedRoll, float addedPitch, float addedYaw){
 }
 
 physx::PxVec3T<float> calculateNextTiltAngle(physx::PxVec3 addedTilt){
-    static const float maxRoll = PhysicsUtil::degreeToRadian(20.f);
-    static const float maxYaw = PhysicsUtil::degreeToRadian(20.f);
+    static const float maxRoll = PhysicsUtil::degreeToRadian(30.f);
+    static const float maxYaw = PhysicsUtil::degreeToRadian(30.f);
     static const float tiltSpeed = 0.01f;
     static const float untiltSpeed = 0.005f;
     static physx::PxVec3 targetTilt = physx::PxVec3(0.f, 0.f, 0.f);

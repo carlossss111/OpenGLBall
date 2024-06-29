@@ -17,8 +17,8 @@ protected:
 	std::vector<Texture> mTexturesLoaded;
 	std::string mDirectory;
 
-	glm::mat4 mPos = glm::mat4(1.f);
-	glm::mat4 mRot = glm::mat4(1.f);
+	glm::mat4 mPos = glm::mat4(0.f);
+	glm::mat4 mRot = glm::mat4(0.f);
 	glm::mat4 mScl = glm::mat4(1.f);
 	std::set<std::string> mTags;
 

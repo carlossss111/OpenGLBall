@@ -1,6 +1,7 @@
 #include "physics/physics_util.h"
 
 // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+// https://stackoverflow.com/questions/1556260/convert-quaternion-rotation-to-rotation-matrix
 
 physx::PxQuat PhysicsUtil::eulerToQuaternion(physx::PxVec3 eulerAngle){
     float roll = eulerAngle.x, pitch = eulerAngle.y, yaw = eulerAngle.z;
@@ -36,6 +37,22 @@ physx::PxVec3 PhysicsUtil::quaternionToEuler(physx::PxQuat q){
     float yaw = std::atan2(siny_cosp, cosy_cosp);
 
     return physx::PxVec3(roll, pitch, yaw);
+}
+
+physx::PxMat44 PhysicsUtil::quaternionToMatrix(physx::PxQuat q){
+    physx::PxMat44 rotMatrix = physx::PxMat44(physx::PxIdentity);
+    rotMatrix.column0.x = 1.0f - 2.0f * (q.y * q.y) - 2.0f * (q.z * q.z);
+    rotMatrix.column1.x = 2.0f * (q.x * q.y) - 2.0f * (q.z * q.w);
+    rotMatrix.column2.x = 2.0f * (q.x * q.z) + 2.0f * (q.y * q.w);
+
+    rotMatrix.column0.y = 2.0f * (q.x * q.y) + 2.0f * (q.z * q.w);
+    rotMatrix.column1.y = 1.0f - 2.0f * (q.x * q.x) - 2.0f * (q.z * q.z); 
+    rotMatrix.column2.y = 2.0f * (q.y * q.z) - 2.0f * (q.x * q.w);
+    
+    rotMatrix.column0.z = 2.0f * (q.x * q.z) - 2.0f * (q.y * q.w);
+    rotMatrix.column1.z = 2.0f * (q.y * q.z) + 2.0f * (q.x * q.w);
+    rotMatrix.column2.z = 1.0f - 2.0f * (q.x * q.x) - 2.0f * (q.y * q.y);
+    return rotMatrix;
 }
 
 float PhysicsUtil::radianToDegree(float rad){
