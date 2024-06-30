@@ -1,11 +1,11 @@
-#include "scene/abstract_model.h"
+#include "scene/model.h"
 
-void AbstractModel::positionRotateScale(Shader* shader) const {
+void Model::positionRotateScale(Shader* shader) const {
 	glm::mat4 modelMatrix = glm::mat4(1.f);
 	shader->setMat4("model", mPos * mRot * mScl);
 }
 
-void AbstractModel::draw(Shader* shader) const {
+void Model::draw(Shader* shader) const {
 	positionRotateScale(shader);
 
 	// Drawing
@@ -14,25 +14,25 @@ void AbstractModel::draw(Shader* shader) const {
 	}
 }
 
-void AbstractModel::setPosition(glm::mat4 posIn) {
+void Model::setPosition(glm::mat4 posIn) {
 	mPos = posIn;
 }
 
-void AbstractModel::setPosition(glm::vec3 posIn) {
+void Model::setPosition(glm::vec3 posIn) {
 	glm::mat4 posMat = glm::mat4(1.f);
 	posMat = glm::translate(posMat, glm::vec3(posIn.x, posIn.y, posIn.z));
 	setPosition(posMat);
 }
 
-void AbstractModel::setPosition(float x, float y, float z) {
+void Model::setPosition(float x, float y, float z) {
 	setPosition(glm::vec3(x,y,z));
 }
 
-void AbstractModel::setRotation(glm::mat4 rotIn) {
+void Model::setRotation(glm::mat4 rotIn) {
 	mRot = rotIn;
 }
 
-void AbstractModel::setRotation(glm::vec3 rotIn) {
+void Model::setRotation(glm::vec3 rotIn) {
 	glm::mat4 rotMat = glm::mat4(1.f);
 	rotMat = glm::rotate(rotMat, rotIn.x, glm::vec3(1.f, 0.f, 0.f));
 	rotMat = glm::rotate(rotMat, rotIn.y, glm::vec3(0.f, 1.f, 0.f));
@@ -40,59 +40,59 @@ void AbstractModel::setRotation(glm::vec3 rotIn) {
 	setRotation(rotMat);
 }
 
-void AbstractModel::setRotation(float x, float y, float z) {
+void Model::setRotation(float x, float y, float z) {
 	setRotation(glm::vec3(x,y,z));
 }
 
-void AbstractModel::setScale(glm::mat4 sclIn) {
+void Model::setScale(glm::mat4 sclIn) {
 	mScl = sclIn;
 }
 
-void AbstractModel::setScale(glm::vec3 sclIn) {
+void Model::setScale(glm::vec3 sclIn) {
 	glm::mat4 sclMat = glm::mat4(1.f);
 	sclMat = glm::scale(sclMat, sclIn);
 	setScale(sclMat);
 }
 
-void AbstractModel::setScale(float x, float y, float z) {
+void Model::setScale(float x, float y, float z) {
 	setScale(glm::vec3(x,y,z));
 }
 
-glm::mat4 AbstractModel::getPositionMat() const {
+glm::mat4 Model::getPositionMat() const {
 	return mPos;
 }
 
-glm::vec3 AbstractModel::getPositionVec() const {
+glm::vec3 Model::getPositionVec() const {
 	return glm::vec3(mPos[3][0], mPos[3][1], mPos[3][2]);
 }
 
 
-glm::mat4 AbstractModel::getRotationMat() const {
+glm::mat4 Model::getRotationMat() const {
 	return mRot;
 }
 
-glm::mat4 AbstractModel::getScaleMat() const {
+glm::mat4 Model::getScaleMat() const {
 	return mScl;
 }
 
-glm::vec3 AbstractModel::getScaleVec() const {
+glm::vec3 Model::getScaleVec() const {
 	return glm::vec3(
 		mScl[0][0], mScl[1][1], mScl[2][2]
 	);
 }
 
-void AbstractModel::addTag(std::string tag) {
+void Model::addTag(std::string tag) {
 	mTags.insert(tag);
 }
 
-void AbstractModel::removeTag(std::string tag) {
+void Model::removeTag(std::string tag) {
 	mTags.erase(tag);
 }
 
-bool AbstractModel::hasTag(std::string tag) const {
+bool Model::hasTag(std::string tag) const {
 	return mTags.contains(tag);
 }
 
-std::set<std::string> AbstractModel::getTags() {
+std::set<std::string> Model::getTags() const {
 	return mTags;
 }

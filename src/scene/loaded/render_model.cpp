@@ -1,6 +1,6 @@
-#include "scene/loaded/model.h"
+#include "scene/loaded/render_model.h"
 
-Model::Model(const char* directoryPath, std::string filePath) {
+RenderModel::RenderModel(const char* directoryPath, std::string filePath) {
 	std::string path = std::string(directoryPath) + filePath;
 
 	// Import the scene with some post processing options
@@ -23,10 +23,10 @@ Model::Model(const char* directoryPath, std::string filePath) {
 	processNode(scene->mRootNode, scene);
 }
 
-Model::Model(const char* directoryPath, std::string filePath,
+RenderModel::RenderModel(const char* directoryPath, std::string filePath,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, 
 	std::set<std::string> tags) :
-	Model(directoryPath, filePath) {
+	RenderModel(directoryPath, filePath) {
 
 	setPosition(position);
 	setRotation(rotation);
@@ -34,7 +34,7 @@ Model::Model(const char* directoryPath, std::string filePath,
 	mTags = tags;
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene) {
+void RenderModel::processNode(aiNode* node, const aiScene* scene) {
 	// Process all meshes in this node.
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -47,7 +47,7 @@ void Model::processNode(aiNode* node, const aiScene* scene) {
 	}
 }
 
-Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
+Mesh RenderModel::processMesh(aiMesh* mesh, const aiScene* scene) {
 	std::vector<Vertex> verts;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
@@ -100,7 +100,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 	return Mesh(verts, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat,
+std::vector<Texture> RenderModel::loadMaterialTextures(aiMaterial* mat,
 	aiTextureType type, std::string typeName) {
 	std::vector<Texture> textures;
 

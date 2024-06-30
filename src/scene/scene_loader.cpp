@@ -176,7 +176,7 @@ int SceneLoader::parse(std::string path) {
 	return 0;
 }
 
-int SceneLoader::load(std::list<AbstractModel*>* modelList) {
+int SceneLoader::load(std::list<Model*>* modelList) {
 	for (auto it = mPreloadedModels.begin(); it != mPreloadedModels.end(); ++it) {
 		PreloadedModel preloaded = *it;
 
@@ -201,14 +201,14 @@ int SceneLoader::load(std::list<AbstractModel*>* modelList) {
 		}
 
 		// Create Model
-		AbstractModel* model;
+		Model* model;
 		if (preloaded.preClass.compare("Cube") == 0) {
 			// Specular path in this case is the name appended with _spec, should be changed later
 			std::string specularPath = preloaded.path;
 			std::string fileType = specularPath.substr(specularPath.find('.'), specularPath.length());
 			specularPath.erase(specularPath.find('.'), specularPath.length());
 			specularPath += "_spec" + fileType;
-			model = new Cube(
+			model = new CubeModel(
 				mModelDir.c_str(),
 				preloaded.path, specularPath,
 				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
@@ -218,7 +218,7 @@ int SceneLoader::load(std::list<AbstractModel*>* modelList) {
 				preloaded.tags);
 		}
 		else if (preloaded.preClass.compare("CheckeredCube") == 0) {
-			model = new Cube(
+			model = new CubeModel(
 				mModelDir.c_str(),
 				preloaded.path, std::string(),
 				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
@@ -228,7 +228,7 @@ int SceneLoader::load(std::list<AbstractModel*>* modelList) {
 				preloaded.tags);
 		}
 		else if (preloaded.preClass.compare("Sphere") == 0) {
-			model = new Sphere(
+			model = new SphereModel(
 				mModelDir.c_str(),
 				preloaded.path,
 				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),
@@ -237,7 +237,7 @@ int SceneLoader::load(std::list<AbstractModel*>* modelList) {
 				preloaded.tags);
 		}
 		else if (preloaded.preClass.compare("Model") == 0){
-			model = new Model(
+			model = new RenderModel(
 				mModelDir.c_str(),
 				preloaded.path,
 				glm::vec3(preloaded.pos[0], preloaded.pos[1], preloaded.pos[2]),

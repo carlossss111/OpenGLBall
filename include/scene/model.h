@@ -11,7 +11,7 @@
 #include "scene/mesh.h"
 #include "scene/texture.h"
 
-class AbstractModel {
+class Model {
 protected:
 	std::vector<Mesh> mMeshes;
 	std::vector<Texture> mTexturesLoaded;
@@ -22,7 +22,7 @@ protected:
 	glm::mat4 mScl = glm::mat4(1.f);
 	std::set<std::string> mTags;
 
-	AbstractModel() {};
+	Model() {};
 
 public:
 	virtual void draw(Shader* shader) const;
@@ -51,8 +51,8 @@ public:
 	virtual void addTag(std::string);
 	virtual void removeTag(std::string);
 	virtual bool hasTag(std::string) const;
-	virtual std::set<std::string> getTags();
+	virtual std::set<std::string> getTags() const;
 
-protected:
+private:
 	virtual void positionRotateScale(Shader* shader) const;
 };

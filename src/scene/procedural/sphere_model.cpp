@@ -1,6 +1,6 @@
-#include "scene/procedural/sphere.h"
+#include "scene/procedural/sphere_model.h"
 
-Sphere::Sphere(std::string directoryPath, std::string filePath) {
+SphereModel::SphereModel(std::string directoryPath, std::string filePath) {
     // A sphere can be defined with triangles.
     // The sector_count is the number of rectangles around the cirumference horizontally
     // The stack_count is the number of rectangles around the circumference vertically
@@ -80,16 +80,16 @@ Sphere::Sphere(std::string directoryPath, std::string filePath) {
     mMeshes.push_back(Mesh(verts, indices, textures));
 }
 
-Sphere::Sphere(std::string directoryPath, std::string filePath,
+SphereModel::SphereModel(std::string directoryPath, std::string filePath,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale,
     std::set<std::string> tags)
-	: Sphere(directoryPath, filePath) {
+	: SphereModel(directoryPath, filePath) {
 	setPosition(position);
 	setRotation(rotation);
 	setScale(scale);
     mTags = tags;
 }
 
-float Sphere::getRadius(){
+float SphereModel::getRadius(){
     return mRadius;
 }

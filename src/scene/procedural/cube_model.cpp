@@ -1,6 +1,6 @@
-#include "scene/procedural/cube.h"
+#include "scene/procedural/cube_model.h"
 
-void Cube::init(std::string directoryPath, std::string diffuseFilePath, std::string specularFilePath) {
+void CubeModel::init(std::string directoryPath, std::string diffuseFilePath, std::string specularFilePath) {
 	std::vector<Vertex> verts;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
@@ -77,11 +77,11 @@ void Cube::init(std::string directoryPath, std::string diffuseFilePath, std::str
 	mMeshes.push_back(Mesh(verts, indices, textures));
 }
 
-Cube::Cube(std::string directoryPath, std::string diffuseFilePath, std::string specularFilePath) {
+CubeModel::CubeModel(std::string directoryPath, std::string diffuseFilePath, std::string specularFilePath) {
 	init(directoryPath, diffuseFilePath, specularFilePath);
 }
 
-Cube::Cube(std::string directoryPath, std::string diffuseFilePath, 
+CubeModel::CubeModel(std::string directoryPath, std::string diffuseFilePath, 
 	std::string specularFilePath,
 	glm::vec3 position, glm::vec3 rotation, glm::vec3 scale,
 	glm::vec2 repeatingTextures, std::set<std::string> tags){

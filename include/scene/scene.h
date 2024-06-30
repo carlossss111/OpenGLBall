@@ -7,15 +7,15 @@
 #include "render/shader.h"
 #include "scene/scene_loader.h"
 
-class Scene : public std::list<AbstractModel*> {
+class Scene : public std::list<Model*> {
 private:
-	std::list<AbstractModel*> mModelList;
+	std::list<Model*> mModelList;
 
 public:
 	Scene();
 	~Scene();
 
-	AbstractModel* get(std::string tag) const; //nullable
+	Model* get(std::string tag) const; //nullable
 	void drawAll(Shader* shader) const;
 
 	iterator begin() {

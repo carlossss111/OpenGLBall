@@ -1,16 +1,16 @@
 #pragma once
 
-#include "scene/abstract_model.h"
+#include "scene/model.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
 // Model contains many meshes
-class Model : public AbstractModel { 
+class RenderModel : public Model { 
 public:
-	Model(const char* directoryPath, std::string filePath);
-	Model(const char* directoryPath, std::string filePath,
+	RenderModel(const char* directoryPath, std::string filePath);
+	RenderModel(const char* directoryPath, std::string filePath,
 		glm::vec3 position, glm::vec3 rotation, glm::vec3 scale,
 		std::set<std::string> tags);
 

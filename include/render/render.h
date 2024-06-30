@@ -18,7 +18,7 @@
 #include "input/camera.h"
 
 #include "scene/scene.h"
-#include "scene/abstract_model.h"
+#include "scene/model.h"
 
 namespace PreRender {
 	void initGl();

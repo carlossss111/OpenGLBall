@@ -9,10 +9,10 @@
 #include <map>
 #include <set>
 
-#include "scene/loaded/model.h"
+#include "scene/loaded/render_model.h"
 
-#include "scene/procedural/cube.h"
-#include "scene/procedural/sphere.h"
+#include "scene/procedural/cube_model.h"
+#include "scene/procedural/sphere_model.h"
 
 /*
 
@@ -57,18 +57,18 @@ private:
 		SELECTOR
 	};
 
-	AbstractModel* newModel(std::string modelName) {
+	Model* newModel(std::string modelName) {
 		if (modelName.compare("cube") == 0) {
-			return new Cube("", "");
+			return new CubeModel("", "");
 		}
 		else if (modelName.compare("checkeredcube") == 0) {
-			return new Cube("", "");
+			return new CubeModel("", "");
 		}
 		else if (modelName.compare("sphere") == 0) {
-			return new Sphere("", "");
+			return new SphereModel("", "");
 		}
 		else {
-			return new Model("", "");
+			return new RenderModel("", "");
 		}
 	}
 
@@ -76,7 +76,7 @@ private:
 	std::list<PreloadedModel> mPreloadedModels;
 public:
 	SceneLoader(std::string levelDir, std::string levelName, std::string modelDir);
-	int load(std::list<AbstractModel*>*);
+	int load(std::list<Model*>*);
 
 private:
 	int parse(std::string path);

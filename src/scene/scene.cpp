@@ -11,7 +11,7 @@ Scene::~Scene() {
     }
 }
 
-AbstractModel* Scene::get(std::string targetTag) const {
+Model* Scene::get(std::string targetTag) const {
     for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
         std::set<std::string> tagList = (*model)->getTags();
         for (auto existingTag = tagList.begin(); existingTag != tagList.end(); ++existingTag) {

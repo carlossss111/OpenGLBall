@@ -34,7 +34,7 @@ public:
     void addTilt(float addedRoll, float addedPitch, float addedYaw);
     void reset();
 private:
-    void initPlayerPhysics(Sphere* model);
-    void initBasePhysics(AbstractModel* model);
+    void initPlayerPhysics(SphereModel* model);
+    void initBasePhysics(Model* model);
     physx::PxMat44 simulateTilt();
 };
