@@ -29,7 +29,10 @@ void PreRender::initGl() {
 Renderer::Renderer(const float& deltaTime) : 
     mDeltaTime(deltaTime),
     mShaderManager(ShaderManager()),
-    mCamera(Camera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(45.f, 20.f))),
+    mCameraManager(CameraManager(2,
+        new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 20.f)),
+        new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 40.f))
+    )),
     mShadow(Shadow(mShaderManager.get(SHADOW_SHADER), 2048, 2048)),
     mLight(Light(
         glm::vec3(1.2f, 10.0f, 2.0f),
@@ -64,12 +67,16 @@ void Renderer::renderScene(const Scene& sceneRef) {
 
     // View Matrix
     glm::mat4 view = glm::mat4(1.f);
+    Camera* camera = mCameraManager.getCamera();
     view = glm::lookAt(
-        mCamera.getPosition(),
-        mCamera.getPosition() + mCamera.getFront(),
-        mCamera.getUp()
+        camera->getPosition(),
+        camera->getPosition() + camera->getFront(),
+        camera->getUp()
     );
     mainShader->setMat4("view", view);
+    #ifdef DEBUG_CAMERA
+    mCameraManager.updateDebugCube(&const_cast<Scene&>(sceneRef));
+    #endif
 
     // Perspective Matrix
     glm::mat4 projection = glm::mat4(1.f);
@@ -84,8 +91,8 @@ void Renderer::renderScene(const Scene& sceneRef) {
     sceneRef.drawAll(mainShader);
 }
 
-Camera* Renderer::getCamera() {
-    return &mCamera;
+CameraManager* Renderer::getCameraManager() {
+    return &mCameraManager;
 }
 
 Light* Renderer::getLight() {

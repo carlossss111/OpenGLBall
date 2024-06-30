@@ -1,10 +1,11 @@
 #pragma once
 
 #include <cstdio>
+#include <string>
 #include <glm/glm.hpp>
 
 class Camera {
-private:
+protected:
 	const float& mDeltaTime;
 
 	glm::vec3 mPosition;
@@ -16,22 +17,20 @@ private:
 	float mYaw;
 	float mPitch;
 
-	const float mMovementSpeed;
-	float mMouseSensitivity;
+	float mMovementSpeed;
 	float mCamDist;
 
-public:
+	std::string mType;
+
 	Camera(const float& deltaTime);
-	Camera(const float& deltaTime, glm::vec3 target, glm::vec2 rotation);
 
-	void setDistance(float dist);
-	void addDistance(float dist);
+public:
+	virtual void setDistance(float dist);
+	virtual void addDistance(float dist);
 
-	glm::vec3 getFront() const;
-	glm::vec3 getPosition() const;
-	glm::vec3 getUp() const;
+	virtual glm::vec3 getFront() const;
+	virtual glm::vec3 getPosition() const;
+	virtual glm::vec3 getUp() const;
 
-	void moveAndOrientCamera(glm::vec3 target, glm::vec2 rotOffset);
-
-	void debugCamera() const;
+	virtual std::string getType() const;
 };

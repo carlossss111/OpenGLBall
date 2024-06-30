@@ -8,6 +8,11 @@ void Model::positionRotateScale(Shader* shader) const {
 void Model::draw(Shader* shader) const {
 	positionRotateScale(shader);
 
+	// Tags
+	if(mTags.contains("hidden")){
+		return;
+	}
+
 	// Drawing
 	for (int i = 0; i < mMeshes.size(); i++) {
 		mMeshes[i].draw(shader);

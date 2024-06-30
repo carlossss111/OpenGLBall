@@ -18,6 +18,14 @@ public:
 	Model* get(std::string tag) const; //nullable
 	void drawAll(Shader* shader) const;
 
+	void push_back(const value_type& __x) {
+		mModelList.push_back(__x);
+	}
+
+	void push_front(const value_type& __x) {
+		mModelList.push_front(__x);
+	}
+
 	iterator begin() {
 		return mModelList.begin();
 	};

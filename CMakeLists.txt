@@ -24,6 +24,7 @@ file(GLOB SOURCES
 	src/scene/procedural/*.cpp
 	src/scene/loaded/*.cpp
 	src/input/*.cpp
+	src/input/camera_types/*.cpp
 	src/physics/*.cpp
 )
 
@@ -43,12 +44,12 @@ set(SHADERS
 # Debug Settings
 if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 	add_compile_definitions(
-		#DEBUG_CAMERA
+		DEBUG_CAMERA
 		#DEBUG_LINES
 		DEBUG_GL
 		DEBUG_PHYSX
 		#DEBUG_TILT
-		DEBUG_FRAMERATE
+		#DEBUG_FRAMERATE
 		#DEBUG_SLOWMOTION
 	)
 endif()

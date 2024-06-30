@@ -1,10 +1,14 @@
 #include "input/keyboard.h"
 
-void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light, Physics* physics) {
+void Input::processKeyboard(GLFWwindow* window, Renderer* renderer, Physics* physics) {
 	glm::vec2 rotOffset = glm::vec2(0.f, 0.f);
 	glm::vec3 tiltOffset = glm::vec3(0.f, 0.f, 0.f);
 	bool camChanged = false;
 	bool tiltChanged = false;
+
+	CameraManager* cameraManager = renderer->getCameraManager();
+	Camera* currentCamera = cameraManager->getCamera();
+	Light* light = renderer->getLight();
 
 	// Exit
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -58,22 +62,33 @@ void Input::processKeyboard(GLFWwindow* window, Camera* camera, Light* light, Ph
 
 	// Zoom or move camera up/down
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-		camera->addDistance(-0.1f);
+		currentCamera->addDistance(-0.1f);
 		camChanged = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-		camera->addDistance(0.1f);
+		currentCamera->addDistance(0.1f);
 		camChanged = true;
+	}
+
+	static float timeout = 0.f;
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+		if (timeout < glfwGetTime()) {
+			cameraManager->changeCamera();
+			timeout = glfwGetTime() + 0.3f;
+		}
 	}
 
 	// Light
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-		light->pos = camera->getPosition();
+		light->pos = currentCamera->getPosition();
 	}
 
 	// Do work
 	if (camChanged) {
-		camera->moveAndOrientCamera(glm::vec3(0.f, 0.f, 0.f), rotOffset);
+		if(currentCamera->getType() == "model_viewer"){
+			ModelViewerCamera* MvCamera = dynamic_cast<ModelViewerCamera*>(currentCamera);
+			MvCamera->moveAndOrientCamera(glm::vec3(0.f, 0.f, 0.f), rotOffset);
+		}
 	}
 	if (tiltChanged) {
 		physics->addTilt(tiltOffset.x, tiltOffset.y, tiltOffset.z);

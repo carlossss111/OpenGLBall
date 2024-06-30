@@ -15,7 +15,8 @@
 #include "render/shadow.h"
 #include "render/light.h"
 
-#include "input/camera.h"
+#include "input/camera_manager.h"
+#include "input/camera_types/model_viewer.h"
 
 #include "scene/scene.h"
 #include "scene/model.h"
@@ -28,7 +29,7 @@ class Renderer {
 private:
 	const float& mDeltaTime;
 	ShaderManager mShaderManager;
-	Camera mCamera;
+	CameraManager mCameraManager;
 	Shadow mShadow;
 	Light mLight;
 
@@ -36,6 +37,6 @@ public:
 	Renderer(const float& deltaTime);
 	void renderScene(const Scene& sceneRef);
 
-	Camera* getCamera();
+	CameraManager* getCameraManager();
 	Light* getLight();
 };

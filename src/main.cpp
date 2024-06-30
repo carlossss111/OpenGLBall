@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 
         // Scene Renderering and input
         renderer.renderScene(scene);
-        Input::processKeyboard(window, renderer.getCamera(), renderer.getLight(), &physics);
+        Input::processKeyboard(window, &renderer, &physics);
 
         // Glfw
         glfwSwapBuffers(window);

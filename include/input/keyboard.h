@@ -4,9 +4,10 @@
 
 #include <GLFW/glfw3.h>
 
-#include "input/camera.h"
-#include "render/light.h"
+#include "render/render.h"
+
+#include "input/camera_types/model_viewer.h"
 
 namespace Input {
-	void processKeyboard(GLFWwindow* window, Camera* camera, Light* light, Physics* physics);
+	void processKeyboard(GLFWwindow* window, Renderer* renderer, Physics* physics);
 }
