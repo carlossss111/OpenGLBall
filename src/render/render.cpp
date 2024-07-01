@@ -1,5 +1,7 @@
 #include "render/render.h"
 
+#define ASPECT_RATIO() static_cast<float>(Window::width) / static_cast<float>(Window::height)
+
 void PreRender::sizeCallback(GLFWwindow* window, int w, int h) {
     Window::width = w; Window::height = h;
     glViewport(0, 0, w, h);
@@ -66,23 +68,11 @@ void Renderer::renderScene(const Scene& sceneRef) {
     mainShader->setInt("depthMap", 10);
     glBindTexture(GL_TEXTURE_2D, mShadow.getDepthMap());
 
-    // View Matrix
-    glm::mat4 view = glm::mat4(1.f);
+    // View and Perspective Matrices
     Camera* camera = mCameraManager.getCurrentCamera();
-    view = glm::lookAt(
-        camera->getPosition(),
-        camera->getPosition() + camera->getFront(),
-        camera->getUp()
-    );
+    glm::mat4 view = camera->calculateView();
+    glm::mat4 projection = camera->calculateProjection(ASPECT_RATIO());
     mainShader->setMat4("view", view);
-
-    // Perspective Matrix
-    glm::mat4 projection = glm::mat4(1.f);
-    projection = glm::perspective(
-        glm::radians(45.f),
-        static_cast<float>(Window::width) / static_cast<float>(Window::height),
-        .01f, 10000.f
-    );
     mainShader->setMat4("projection", projection);
 
     // Draw
@@ -162,8 +152,24 @@ void Renderer::renderCameraBox(){
 }
 void Renderer::renderCameraFrustum(){
     for(int i = 0; i < mCameraManager.getNumOfCameras(); i++){
-        glm::vec3 camPos = mCameraManager.getCamera(i)->getPosition();
-        renderLine(glm::vec3(camPos), glm::vec3(0.f,0.f,0.f));
+        Camera* camera = mCameraManager.getCamera(i);
+        glm::vec3 buff[8];
+        camera->getPerspectiveVertices(buff, ASPECT_RATIO());
+        
+        renderLine(buff[0], buff[1]); // nearTL, nearTR
+        renderLine(buff[0], buff[2]); // nearTL, nearBL
+        renderLine(buff[2], buff[3]); // nearBL, nearBR
+        renderLine(buff[3], buff[1]); // nearBR, nearTR
+
+        renderLine(buff[4], buff[5]); // farTL, farTR
+        renderLine(buff[4], buff[6]); // farTL, farBL
+        renderLine(buff[6], buff[7]); // farBL, farBR
+        renderLine(buff[7], buff[5]); // farBR, farTR
+
+        renderLine(buff[0], buff[4]); // nearTL, farTL
+        renderLine(buff[1], buff[5]); // nearTR, farTR
+        renderLine(buff[2], buff[6]); // nearBL, farBL
+        renderLine(buff[3], buff[7]); // nearBR, farBR
     }
 }
 #endif
