@@ -7,7 +7,7 @@ void Input::processKeyboard(GLFWwindow* window, Renderer* renderer, Physics* phy
 	bool tiltChanged = false;
 
 	CameraManager* cameraManager = renderer->getCameraManager();
-	Camera* currentCamera = cameraManager->getCamera();
+	Camera* currentCamera = cameraManager->getCurrentCamera();
 	Light* light = renderer->getLight();
 
 	// Exit
@@ -73,7 +73,7 @@ void Input::processKeyboard(GLFWwindow* window, Renderer* renderer, Physics* phy
 	static float timeout = 0.f;
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
 		if (timeout < glfwGetTime()) {
-			cameraManager->changeCamera();
+			cameraManager->changeCurrentCamera();
 			timeout = glfwGetTime() + 0.3f;
 		}
 	}

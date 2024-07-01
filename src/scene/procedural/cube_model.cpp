@@ -60,11 +60,13 @@ void CubeModel::init(std::string directoryPath, std::string diffuseFilePath, std
 	}
 
 	// Textures
-	Texture tex;
-	tex.id = PreRender::createTexture(directoryPath + "/" + diffuseFilePath);
-	tex.path = diffuseFilePath;
-	tex.type = "diffuse";
-	textures.push_back(tex);
+	if (!diffuseFilePath.empty()) {
+		Texture tex;
+		tex.id = PreRender::createTexture(directoryPath + "/" + diffuseFilePath);
+		tex.path = diffuseFilePath;
+		tex.type = "diffuse";
+		textures.push_back(tex);
+	}
 
 	if (!specularFilePath.empty()) {
 		Texture tex2;

@@ -39,6 +39,14 @@ glm::vec3 Camera::getUp() const {
 	return mUp;
 }
 
+float Camera::getPitch() const {
+	return mPitch;
+}
+
+float Camera::getYaw() const{
+	return mYaw;
+}
+
 std::string Camera::getType() const {
 	return mType;
 }

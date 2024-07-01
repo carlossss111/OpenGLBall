@@ -39,4 +39,14 @@ public:
 
 	CameraManager* getCameraManager();
 	Light* getLight();
+
+#ifdef DEBUG_GL
+private:
+	void renderLine(glm::vec3 start, glm::vec3 end, glm::vec3 colour = glm::vec3(1.f, 0.f, 0.f));
+	void renderAxis();
+#ifdef DEBUG_CAMERA
+	void renderCameraBox();
+	void renderCameraFrustum();
+#endif
+#endif
 };

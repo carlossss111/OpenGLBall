@@ -17,12 +17,9 @@ public:
     CameraManager(int size, Camera* camera, ...);
     ~CameraManager();
 
-    void changeCamera();
-    Camera* getCamera();
+    void changeCurrentCamera();
+    Camera* getCurrentCamera() const;
 
-#ifdef DEBUG_CAMERA
-public:
-    std::vector<CubeModel*> mDebugCubes = std::vector<CubeModel*>();
-    void updateDebugCube(Scene* scene);
-#endif
+    int getNumOfCameras() const;
+    Camera* getCamera(int index) const;
 };

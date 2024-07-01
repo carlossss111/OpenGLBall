@@ -31,6 +31,8 @@ public:
 	virtual glm::vec3 getFront() const;
 	virtual glm::vec3 getPosition() const;
 	virtual glm::vec3 getUp() const;
+	virtual float getPitch() const;
+	virtual float getYaw() const;
 
 	virtual std::string getType() const;
 };
