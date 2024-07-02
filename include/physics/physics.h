@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <map>
 
 #include <PxPhysicsAPI.h>
 
@@ -10,6 +11,8 @@
 #include "scene/scene.h"
 
 #define PHYSICS_RECORD_MEMORY_ALLOC true
+#define PHYSICS_TILTABLE_TAG "tiltable"
+#define PHYSICS_PLAYER_TAG "player"
 
 class Physics{
 private:
@@ -24,8 +27,9 @@ private:
     physx::PxDefaultCpuDispatcher* mDispatcher;
     physx::PxScene* mPhysicsScene;
 
-    physx::PxRigidBody* mPlayerRB;
-    physx::PxRigidDynamic* mBaseRB;
+    physx::PxRigidDynamic* mPlayerRB;
+    std::map<physx::PxRigidDynamic*, Model*> mTiltableMap;
+    std::map<physx::PxRigidBody*, physx::PxTransform> mInitialPositions;
     physx::PxVec3 mAddedTilt;
     float mTiltPitch;
 public:
@@ -37,5 +41,4 @@ public:
 private:
     void initPlayerPhysics(SphereModel* model);
     void initBasePhysics(Model* model);
-    physx::PxMat44 simulateTilt();
 };

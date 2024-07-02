@@ -38,11 +38,13 @@ Physics::Physics(const float& deltaTime, const Scene& renderScene) :
 	mPhysicsScene = mPhysics->createScene(sceneDesc);
 
     // Check for player & base
-    Model* model;
-    if(model = renderScene.get("base")){
-        initBasePhysics(model);
+    for (auto model = renderScene.begin(); model != renderScene.end(); ++model) {
+        if((*model)->hasTag(PHYSICS_TILTABLE_TAG)){
+            initBasePhysics(*model);
+        }
     }
-    if(model = renderScene.get("player")){
+    Model* model;
+    if(model = renderScene.get(PHYSICS_PLAYER_TAG)){
         initPlayerPhysics(dynamic_cast<SphereModel*>(model));
     }
 }
@@ -62,7 +64,7 @@ void Physics::initPlayerPhysics(SphereModel* model){
     const physx::PxSphereGeometry geometry(model->getRadius());
     physx::PxMaterial* material = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
     physx::PxShape* sphereShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
-    
+
     mPlayerRB = mPhysics->createRigidDynamic(
         physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPositionVec()))
     );
@@ -71,6 +73,8 @@ void Physics::initPlayerPhysics(SphereModel* model){
     sphereShape->release();
     material->release();
 
+    mInitialPositions.insert_or_assign(mPlayerRB, 
+        physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPositionVec())));
     mPhysicsScene->addActor(*mPlayerRB);
 }
 
@@ -80,47 +84,22 @@ void Physics::initBasePhysics(Model* model){
     physx::PxMaterial* material = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
     physx::PxShape* boxShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
 
-    mBaseRB = mPhysics->createRigidDynamic(
+    physx::PxRigidDynamic* rigidBody;
+    rigidBody = mPhysics->createRigidDynamic(
         physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPositionVec()))
     );
-    mBaseRB->attachShape(*boxShape);
+    rigidBody->attachShape(*boxShape);
     
     // Remove gravity and set as kinematic target
-    mBaseRB->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
+    rigidBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
 
     boxShape->release();
     material->release();
 
-    mPhysicsScene->addActor(*mBaseRB);
-}
-
-void Physics::simulate(Scene& renderScene){
-    // Simulate
-	mPhysicsScene->simulate(mDeltaTime);
-	mPhysicsScene->fetchResults(true);
-
-    // Tilt based on input or lack thereof
-    physx::PxMat44 tiltMatrix = simulateTilt();
-
-    // Rendering Update
-    physx::PxTransform playerTransform = mPlayerRB->getGlobalPose();
-    physx::PxTransform baseTransform = mBaseRB->getGlobalPose();
-    Model* model;
-    if(model = renderScene.get("player")){
-        physx::PxVec3 pos = playerTransform.p;
-        model->setPosition(pos.x, pos.y, pos.z);
-        physx::PxMat44 rotationMat = PhysicsUtil::quaternionToMatrix(playerTransform.q);
-        model->setRotation(PhysicsUtil::pxToGlmMat4(rotationMat));
-    }
-    if(model = renderScene.get("base")){
-        model->setPosition(PhysicsUtil::pxToGlmVec3(baseTransform.p));
-        model->setRotation(PhysicsUtil::pxToGlmMat4(PhysicsUtil::quaternionToMatrix(baseTransform.q)));
-    }
-}
-
-void Physics::addTilt(float tiltAxis, float addedRoll, float addedYaw){
-    mAddedTilt = physx::PxVec3(addedRoll, 0.f, addedYaw);
-    mTiltPitch = tiltAxis;
+    mInitialPositions.insert_or_assign(rigidBody, 
+        physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPositionVec())));
+    mTiltableMap.insert_or_assign(rigidBody, model);
+    mPhysicsScene->addActor(*rigidBody);
 }
 
 physx::PxVec3T<float> calculateNextTiltAngle(physx::PxVec3 addedTilt){
@@ -193,7 +172,7 @@ physx::PxVec3T<float> calculateNextTiltAngle(physx::PxVec3 addedTilt){
     return physx::PxVec3(nextRoll, 0.f, nextYaw);
 }
 
-physx::PxMat44T<float> calculateTiltTransformation(physx::PxVec3 initialPosition, float pitchAxis, physx::PxVec3 pivotPoint, physx::PxVec3 nextAngle) {
+physx::PxMat44T<float> calculateTiltTransformation(float pitchAxis, physx::PxVec3 pivotPoint, physx::PxVec3 nextAngle) {
     /* To calculate the new transformation of the stage:
     *  First we translate the stage to the player's position so that all rotations take it's position as the origin.
     *  Next we rotate the board with the pitch with the direction of the camera, then rotate the tilt based off of that axis.
@@ -237,8 +216,7 @@ physx::PxMat44T<float> calculateTiltTransformation(physx::PxVec3 initialPosition
     yawRotationMatrix.column1.y =  std::cos(nextYawAngle);
 
     // Translate back to the world origin and initial position
-    originTranslationMatrix.column3 = physx::PxVec4(-pivotPoint.x, 0.f, -pivotPoint.z, 1.f)
-        + physx::PxVec4(initialPosition, 0.f);
+    originTranslationMatrix.column3 = physx::PxVec4(-pivotPoint.x, 0.f, -pivotPoint.z, 1.f);
 
     // Combine each transformation in this order (order is important!!!)
     return pivotTranslationMatrix 
@@ -249,29 +227,67 @@ physx::PxMat44T<float> calculateTiltTransformation(physx::PxVec3 initialPosition
         * originTranslationMatrix;
 }
 
-physx::PxMat44 Physics::simulateTilt(){
-    // Calculate angle to tilt based on input (or lack of input)
-    physx::PxVec3 nextTiltAngle = calculateNextTiltAngle(mAddedTilt);
-
-    // Calculate transformation matrix
-    static const physx::PxVec3 initialBasePosition = mBaseRB->getGlobalPose().p;
-    physx::PxMat44 tiltMatrix = calculateTiltTransformation(
-        initialBasePosition, mTiltPitch, mPlayerRB->getGlobalPose().p, nextTiltAngle
-    );
-
-    // Apply transformation matrix
-    mBaseRB->setKinematicTarget(physx::PxTransform(
-        tiltMatrix
-    ));
-
-    // Clear user input
-    mAddedTilt = physx::PxVec3(0.f, 0.f, 0.f);
-
-    // Return matrix so it can be applied to the rendered model
-    return tiltMatrix;
+physx::PxMat44T<float> translateMatrix(physx::PxVec3 dest, physx::PxMat44 matrix){
+    physx::PxMat44 translationMatrix   = physx::PxMat44(physx::PxIdentity);
+    translationMatrix.column3 = physx::PxVec4(dest, 1.f);
+    return matrix * translationMatrix;
 }
 
 void Physics::reset() {
-    mPlayerRB->setGlobalPose(physx::PxTransform(physx::PxVec3(0.f, 5.f, 0.f)));
-    mPlayerRB->clearForce(physx::PxForceMode::eFORCE);
+    mPlayerRB->setGlobalPose(mInitialPositions.at(mPlayerRB));
+    mPlayerRB->setLinearVelocity(physx::PxVec3(0.f, 0.f, 0.f));
+}
+
+void Physics::simulate(Scene& renderScene){
+    // Simulate collisions
+    static int loaded = 0;
+    if(loaded < 2){
+        loaded++;   // hack to stop the ball falling through the floor
+        return;     // at the start when there's a high deltatime, should change later
+    }
+
+    // Simulate collisions
+    mPhysicsScene->simulate(mDeltaTime);
+    mPhysicsScene->fetchResults(true);
+    
+    // Render Player
+    if(renderScene.get(PHYSICS_PLAYER_TAG)){
+        Model* model = renderScene.get(PHYSICS_PLAYER_TAG);
+
+        // Render
+        physx::PxTransform playerTransform = mPlayerRB->getGlobalPose();
+        physx::PxVec3 pos = playerTransform.p;
+        model->setPosition(pos.x, pos.y, pos.z);
+        physx::PxMat44 rotationMat = PhysicsUtil::quaternionToMatrix(playerTransform.q);
+        model->setRotation(PhysicsUtil::pxToGlmMat4(rotationMat));
+    }
+
+    // Calculate tilt
+    physx::PxVec3 nextTiltAngle = calculateNextTiltAngle(mAddedTilt);
+    physx::PxMat44 tiltMatrix = calculateTiltTransformation(mTiltPitch, mPlayerRB->getGlobalPose().p, nextTiltAngle);
+
+    // Move and render tiltable surfaces
+    for (auto tiltable = mTiltableMap.begin(); tiltable != mTiltableMap.end(); ++tiltable) {
+        // Move
+        physx::PxRigidDynamic* rigidbody = (*tiltable).first;
+        Model* model = (*tiltable).second;
+        physx::PxVec3 initialPos = mInitialPositions.at(rigidbody).p;
+        physx::PxMat44 finalMatrix = translateMatrix(initialPos, tiltMatrix);
+        rigidbody->setKinematicTarget(physx::PxTransform(finalMatrix));
+
+        // Render
+        physx::PxTransform baseTransform = rigidbody->getGlobalPose();
+        physx::PxVec3 pos = baseTransform.p;
+        model->setPosition(pos.x, pos.y, pos.z);
+        physx::PxMat44 rotationMat = PhysicsUtil::quaternionToMatrix(baseTransform.q);
+        model->setRotation(PhysicsUtil::pxToGlmMat4(rotationMat));
+    }
+
+    // Reset user input
+    mAddedTilt = physx::PxVec3(0.f, 0.f, 0.f);
+}
+
+void Physics::addTilt(float tiltAxis, float addedRoll, float addedYaw){
+    mAddedTilt = physx::PxVec3(addedRoll, 0.f, addedYaw);
+    mTiltPitch = tiltAxis;
 }
