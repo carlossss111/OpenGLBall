@@ -73,8 +73,10 @@ void Physics::initPlayerPhysics(SphereModel* model){
     sphereShape->release();
     material->release();
 
-    mInitialPositions.insert_or_assign(mPlayerRB, 
-        physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPositionVec())));
+    mInitialPositions.insert_or_assign(mPlayerRB, physx::PxTransform(
+        PhysicsUtil::glmToPxVec3(model->getPositionVec()),
+        PhysicsUtil::matrixToQuaternion(PhysicsUtil::glmToPxMat4(model->getRotationMat()))
+    ));
     mPhysicsScene->addActor(*mPlayerRB);
 }
 
@@ -96,8 +98,10 @@ void Physics::initBasePhysics(Model* model){
     boxShape->release();
     material->release();
 
-    mInitialPositions.insert_or_assign(rigidBody, 
-        physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPositionVec())));
+    mInitialPositions.insert_or_assign(rigidBody, physx::PxTransform(
+        PhysicsUtil::glmToPxVec3(model->getPositionVec()),
+        PhysicsUtil::matrixToQuaternion(PhysicsUtil::glmToPxMat4(model->getRotationMat()))
+    ));
     mTiltableMap.insert_or_assign(rigidBody, model);
     mPhysicsScene->addActor(*rigidBody);
 }
@@ -196,7 +200,7 @@ physx::PxMat44T<float> calculateTiltTransformation(float pitchAxis, physx::PxVec
     rollRotationMatrix.column1.z = -std::sin(nextRollAngle);
     rollRotationMatrix.column2.y =  std::sin(nextRollAngle);
     rollRotationMatrix.column2.z =  std::cos(nextRollAngle);
-
+    
     float nextPitchAngle = pitchAxis;
     pitchRotationMatrix.column0.x = std::cos(nextPitchAngle);
     pitchRotationMatrix.column2.x = std::sin(nextPitchAngle);
@@ -227,15 +231,14 @@ physx::PxMat44T<float> calculateTiltTransformation(float pitchAxis, physx::PxVec
         * originTranslationMatrix;
 }
 
-physx::PxMat44T<float> translateMatrix(physx::PxVec3 dest, physx::PxMat44 matrix){
-    physx::PxMat44 translationMatrix   = physx::PxMat44(physx::PxIdentity);
-    translationMatrix.column3 = physx::PxVec4(dest, 1.f);
-    return matrix * translationMatrix;
-}
-
 void Physics::reset() {
     mPlayerRB->setGlobalPose(mInitialPositions.at(mPlayerRB));
     mPlayerRB->setLinearVelocity(physx::PxVec3(0.f, 0.f, 0.f));
+}
+
+void Physics::addTilt(float tiltAxis, float addedRoll, float addedYaw){
+    mAddedTilt = physx::PxVec3(addedRoll, 0.f, addedYaw);
+    mTiltPitch = tiltAxis;
 }
 
 void Physics::simulate(Scene& renderScene){
@@ -272,7 +275,7 @@ void Physics::simulate(Scene& renderScene){
         physx::PxRigidDynamic* rigidbody = (*tiltable).first;
         Model* model = (*tiltable).second;
         physx::PxVec3 initialPos = mInitialPositions.at(rigidbody).p;
-        physx::PxMat44 finalMatrix = translateMatrix(initialPos, tiltMatrix);
+        physx::PxMat44 finalMatrix = tiltMatrix * physx::PxTransform(mInitialPositions.at(rigidbody));
         rigidbody->setKinematicTarget(physx::PxTransform(finalMatrix));
 
         // Render
@@ -285,9 +288,4 @@ void Physics::simulate(Scene& renderScene){
 
     // Reset user input
     mAddedTilt = physx::PxVec3(0.f, 0.f, 0.f);
-}
-
-void Physics::addTilt(float tiltAxis, float addedRoll, float addedYaw){
-    mAddedTilt = physx::PxVec3(addedRoll, 0.f, addedYaw);
-    mTiltPitch = tiltAxis;
 }

@@ -2,6 +2,7 @@
 
 // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 // https://stackoverflow.com/questions/1556260/convert-quaternion-rotation-to-rotation-matrix
+// https://math.stackexchange.com/questions/893984/conversion-of-rotation-matrix-to-quaternion
 
 physx::PxQuat PhysicsUtil::eulerToQuaternion(physx::PxVec3 eulerAngle){
     float roll = eulerAngle.x, pitch = eulerAngle.y, yaw = eulerAngle.z;
@@ -39,6 +40,33 @@ physx::PxVec3 PhysicsUtil::quaternionToEuler(physx::PxQuat q){
     return physx::PxVec3(roll, pitch, yaw);
 }
 
+physx::PxQuat PhysicsUtil::matrixToQuaternion(physx::PxMat44 m){
+    physx::PxQuat quat;
+    float t;
+    if (m.column2.z < 0) {
+        if (m.column0.x > m.column1.y) {
+            t = 1.f + m.column0.x - m.column1.y - m.column2.z;
+            quat = physx::PxQuat(t, m.column1.x + m.column0.y, m.column0.z + m.column2.x, m.column2.y - m.column1.z);
+        }
+        else {
+            t = 1.f - m.column0.x + m.column1.y - m.column2.z;
+            quat = physx::PxQuat(m.column1.x + m.column0.y, t, m.column2.y + m.column1.z, m.column0.z - m.column2.x);
+        }
+    }
+    else {
+        if (m.column0.x < -m.column1.y) {
+            t = 1.f - m.column0.x - m.column1.y + m.column2.z;
+            quat = physx::PxQuat(m.column0.z + m.column2.x, m.column2.y + m.column1.z, t, m.column1.x - m.column0.y);
+        }
+        else {
+            t = 1.f + m.column0.x + m.column1.y + m.column2.z;
+            quat = physx::PxQuat(m.column2.y - m.column1.z, m.column0.z - m.column2.x, m.column1.x - m.column0.y, t);
+        }
+    }
+    quat *= 0.5f / std::sqrt(t);
+    return quat;
+}
+
 physx::PxMat44 PhysicsUtil::quaternionToMatrix(physx::PxQuat q){
     physx::PxMat44 rotMatrix = physx::PxMat44(physx::PxIdentity);
     rotMatrix.column0.x = 1.0f - 2.0f * (q.y * q.y) - 2.0f * (q.z * q.z);
@@ -69,6 +97,27 @@ physx::PxVec3 PhysicsUtil::glmToPxVec3(glm::vec3 vec){
 
 glm::vec3 PhysicsUtil::pxToGlmVec3(physx::PxVec3 vec){
     return glm::vec3(vec.x, vec.y, vec.z);
+}
+
+physx::PxMat44 PhysicsUtil::glmToPxMat4(glm::mat4 glMat){
+    physx::PxMat44 nvMat;
+    nvMat.column0.x = glMat[0][0];
+    nvMat.column1.x = glMat[0][1];
+    nvMat.column2.x = glMat[0][2];
+    nvMat.column3.x = glMat[0][3];
+    nvMat.column0.y = glMat[1][0];
+    nvMat.column1.y = glMat[1][1];
+    nvMat.column2.y = glMat[1][2];
+    nvMat.column3.y = glMat[1][3];
+    nvMat.column0.z = glMat[2][0];
+    nvMat.column1.z = glMat[2][1];
+    nvMat.column2.z = glMat[2][2];
+    nvMat.column3.z = glMat[2][3];
+    nvMat.column0.w = glMat[3][0];
+    nvMat.column1.w = glMat[3][1];
+    nvMat.column2.w = glMat[3][2];
+    nvMat.column3.w = glMat[3][3];
+    return nvMat;
 }
 
 glm::mat4 PhysicsUtil::pxToGlmMat4(physx::PxMat44 nvMat){
