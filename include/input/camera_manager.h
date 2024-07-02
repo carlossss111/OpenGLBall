@@ -2,8 +2,12 @@
 
 #include <vector>
 #include <cstdarg>
+#include <string>
 
 #include "camera.h"
+
+#define FOLLOW_CAMERA "follow"
+#define STAGE_CAMERA "stageview"
 
 #ifdef DEBUG_CAMERA
 #include "scene/scene.h"
@@ -22,4 +26,6 @@ public:
 
     int getNumOfCameras() const;
     Camera* getCamera(int index) const;
+    Camera* getCamera(std::string name) const;
+    bool isCurrent(std::string name) const;
 };

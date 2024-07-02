@@ -6,6 +6,6 @@ class ModelViewerCamera : public Camera{
 private:
 public:
     ModelViewerCamera(const float& deltaTime);
-    ModelViewerCamera(const float& deltaTime, glm::vec3 target, glm::vec2 rotation);
+    ModelViewerCamera(const float& deltaTime, glm::vec3 target, glm::vec2 rotation, std::string name = "");
     void moveAndOrientCamera(glm::vec3 target, glm::vec2 rotOffset);
 };

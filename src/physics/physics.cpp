@@ -39,11 +39,11 @@ Physics::Physics(const float& deltaTime, const Scene& renderScene) :
 
     // Check for player & base
     Model* model;
-    if(model = renderScene.get("player")){
-        initPlayerPhysics(dynamic_cast<SphereModel*>(model));
-    }
     if(model = renderScene.get("base")){
         initBasePhysics(model);
+    }
+    if(model = renderScene.get("player")){
+        initPlayerPhysics(dynamic_cast<SphereModel*>(model));
     }
 }
 
@@ -51,7 +51,9 @@ Physics::~Physics(){
     mDispatcher->release();
     mPhysicsScene->release();
     mPhysics->release();
+#ifdef DEBUG_PHYSX
     mPvd->release();
+#endif
     mFoundation->release();
 }
 
@@ -111,13 +113,14 @@ void Physics::simulate(Scene& renderScene){
         model->setRotation(PhysicsUtil::pxToGlmMat4(rotationMat));
     }
     if(model = renderScene.get("base")){
-        model->setPosition(0.f, 0.f, 0.f);
-        model->setRotation(PhysicsUtil::pxToGlmMat4(tiltMatrix));
+        model->setPosition(PhysicsUtil::pxToGlmVec3(baseTransform.p));
+        model->setRotation(PhysicsUtil::pxToGlmMat4(PhysicsUtil::quaternionToMatrix(baseTransform.q)));
     }
 }
 
-void Physics::addTilt(float addedRoll, float addedPitch, float addedYaw){
-    mAddedTilt = physx::PxVec3(addedRoll, addedPitch, addedYaw);
+void Physics::addTilt(float tiltAxis, float addedRoll, float addedYaw){
+    mAddedTilt = physx::PxVec3(addedRoll, 0.f, addedYaw);
+    mTiltPitch = tiltAxis;
 }
 
 physx::PxVec3T<float> calculateNextTiltAngle(physx::PxVec3 addedTilt){
@@ -190,10 +193,18 @@ physx::PxVec3T<float> calculateNextTiltAngle(physx::PxVec3 addedTilt){
     return physx::PxVec3(nextRoll, 0.f, nextYaw);
 }
 
-physx::PxMat44T<float> calculateTiltTransformation(physx::PxVec3 pivotPoint, physx::PxVec3 nextAngle) {
+physx::PxMat44T<float> calculateTiltTransformation(physx::PxVec3 initialPosition, float pitchAxis, physx::PxVec3 pivotPoint, physx::PxVec3 nextAngle) {
+    /* To calculate the new transformation of the stage:
+    *  First we translate the stage to the player's position so that all rotations take it's position as the origin.
+    *  Next we rotate the board with the pitch with the direction of the camera, then rotate the tilt based off of that axis.
+    *  Then we rotate the board's pitch backwards the same amount, so the tilt is kept but the horizontal rotation is reverted.
+    *  Finally, we translate the board back by the same amount as before but in the other direction.
+    *  The result is that the board is tilted about the player's position and moved slightly, but otherwise remains in the same position.
+    */
     physx::PxMat44 pivotTranslationMatrix   = physx::PxMat44(physx::PxIdentity);
     physx::PxMat44 rollRotationMatrix       = physx::PxMat44(physx::PxIdentity);
     physx::PxMat44 pitchRotationMatrix      = physx::PxMat44(physx::PxIdentity);
+    physx::PxMat44 undoPitchRotationMatrix  = physx::PxMat44(physx::PxIdentity);
     physx::PxMat44 yawRotationMatrix        = physx::PxMat44(physx::PxIdentity);
     physx::PxMat44 originTranslationMatrix  = physx::PxMat44(physx::PxIdentity);
     
@@ -207,11 +218,17 @@ physx::PxMat44T<float> calculateTiltTransformation(physx::PxVec3 pivotPoint, phy
     rollRotationMatrix.column2.y =  std::sin(nextRollAngle);
     rollRotationMatrix.column2.z =  std::cos(nextRollAngle);
 
-    float nextPitchAngle = PhysicsUtil::degreeToRadian(0.f);
+    float nextPitchAngle = pitchAxis;
     pitchRotationMatrix.column0.x = std::cos(nextPitchAngle);
     pitchRotationMatrix.column2.x = std::sin(nextPitchAngle);
     pitchRotationMatrix.column0.z = -std::sin(nextPitchAngle);
     pitchRotationMatrix.column2.z = std::cos(nextPitchAngle);
+
+    float undoPitchAngle = -pitchAxis;
+    undoPitchRotationMatrix.column0.x = std::cos(undoPitchAngle);
+    undoPitchRotationMatrix.column2.x = std::sin(undoPitchAngle);
+    undoPitchRotationMatrix.column0.z = -std::sin(undoPitchAngle);
+    undoPitchRotationMatrix.column2.z = std::cos(undoPitchAngle);
 
     float nextYawAngle = nextAngle.z;
     yawRotationMatrix.column0.x =  std::cos(nextYawAngle);
@@ -219,11 +236,17 @@ physx::PxMat44T<float> calculateTiltTransformation(physx::PxVec3 pivotPoint, phy
     yawRotationMatrix.column1.x =  std::sin(nextYawAngle);
     yawRotationMatrix.column1.y =  std::cos(nextYawAngle);
 
-    // Translate back to the world origin
-    originTranslationMatrix.column3 = physx::PxVec4(-pivotPoint.x, 0.f, -pivotPoint.z, 1.f);
+    // Translate back to the world origin and initial position
+    originTranslationMatrix.column3 = physx::PxVec4(-pivotPoint.x, 0.f, -pivotPoint.z, 1.f)
+        + physx::PxVec4(initialPosition, 0.f);
 
-    // Combine each transformation in this order
-    return pivotTranslationMatrix * rollRotationMatrix * yawRotationMatrix * originTranslationMatrix;
+    // Combine each transformation in this order (order is important!!!)
+    return pivotTranslationMatrix 
+        * pitchRotationMatrix 
+        * rollRotationMatrix 
+        * yawRotationMatrix 
+        * undoPitchRotationMatrix
+        * originTranslationMatrix;
 }
 
 physx::PxMat44 Physics::simulateTilt(){
@@ -231,7 +254,10 @@ physx::PxMat44 Physics::simulateTilt(){
     physx::PxVec3 nextTiltAngle = calculateNextTiltAngle(mAddedTilt);
 
     // Calculate transformation matrix
-    physx::PxMat44 tiltMatrix = calculateTiltTransformation(mPlayerRB->getGlobalPose().p, nextTiltAngle);
+    static const physx::PxVec3 initialBasePosition = mBaseRB->getGlobalPose().p;
+    physx::PxMat44 tiltMatrix = calculateTiltTransformation(
+        initialBasePosition, mTiltPitch, mPlayerRB->getGlobalPose().p, nextTiltAngle
+    );
 
     // Apply transformation matrix
     mBaseRB->setKinematicTarget(physx::PxTransform(

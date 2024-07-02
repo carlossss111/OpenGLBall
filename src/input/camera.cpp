@@ -15,7 +15,7 @@ Camera::Camera(const float& deltaTime) :
 	mPitch(0.f),
 	mMovementSpeed(100.f),
 	mCamDist(1.f),
-	mType("abstract")
+	mName("")
 	{};
 
 
@@ -62,8 +62,8 @@ float Camera::getYaw() const{
 	return mYaw;
 }
 
-std::string Camera::getType() const {
-	return mType;
+std::string Camera::getName() const {
+	return mName;
 }
 
 #ifdef DEBUG_CAMERA

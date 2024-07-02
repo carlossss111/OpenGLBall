@@ -35,3 +35,16 @@ int CameraManager::getNumOfCameras() const{
 Camera* CameraManager::getCamera(int index) const{
     return mCameraList[index];
 }
+
+Camera* CameraManager::getCamera(std::string name) const {
+    for (auto camera = mCameraList.begin(); camera != mCameraList.end(); ++camera) {
+        if((*camera)->getName() == name){
+            return *camera;
+        }
+    }
+    return nullptr;
+}
+
+bool CameraManager::isCurrent(std::string name) const {
+    return getCurrentCamera()->getName() == name;
+}

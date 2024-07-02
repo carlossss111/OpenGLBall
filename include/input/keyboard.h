@@ -5,9 +5,8 @@
 #include <GLFW/glfw3.h>
 
 #include "render/render.h"
-
 #include "input/camera_types/model_viewer.h"
 
 namespace Input {
-	void processKeyboard(GLFWwindow* window, Renderer* renderer, Physics* physics);
+	void processKeyboard(GLFWwindow* window, Scene* scene, Renderer* renderer, Physics* physics);
 }

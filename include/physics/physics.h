@@ -27,11 +27,12 @@ private:
     physx::PxRigidBody* mPlayerRB;
     physx::PxRigidDynamic* mBaseRB;
     physx::PxVec3 mAddedTilt;
+    float mTiltPitch;
 public:
     Physics(const float& deltaTime, const Scene& renderScene);
     ~Physics();
     void simulate(Scene& renderScene);
-    void addTilt(float addedRoll, float addedPitch, float addedYaw);
+    void addTilt(float tiltAxis, float addedRoll, float addedYaw);
     void reset();
 private:
     void initPlayerPhysics(SphereModel* model);

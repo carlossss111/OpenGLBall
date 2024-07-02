@@ -25,7 +25,7 @@ protected:
 	float mMovementSpeed;
 	float mCamDist;
 
-	std::string mType;
+	std::string mName;
 
 	Camera(const float& deltaTime);
 
@@ -41,7 +41,7 @@ public:
 	virtual glm::vec3 getUp() const;
 	virtual float getPitch() const;
 	virtual float getYaw() const;
-	virtual std::string getType() const;
+	virtual std::string getName() const;
 
 #ifdef DEBUG_CAMERA
 	virtual void getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio) const;

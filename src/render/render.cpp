@@ -32,8 +32,8 @@ Renderer::Renderer(const float& deltaTime) :
     mDeltaTime(deltaTime),
     mShaderManager(ShaderManager()),
     mCameraManager(CameraManager(2,
-        new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 20.f)),
-        new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 40.f))
+        new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 20.f), FOLLOW_CAMERA),
+        new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 40.f), STAGE_CAMERA)
     )),
     mShadow(Shadow(mShaderManager.get(SHADOW_SHADER), 2048, 2048)),
     mLight(Light(

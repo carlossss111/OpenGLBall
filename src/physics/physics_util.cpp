@@ -67,6 +67,10 @@ physx::PxVec3 PhysicsUtil::glmToPxVec3(glm::vec3 vec){
     return physx::PxVec3(vec.x, vec.y, vec.z);
 }
 
+glm::vec3 PhysicsUtil::pxToGlmVec3(physx::PxVec3 vec){
+    return glm::vec3(vec.x, vec.y, vec.z);
+}
+
 glm::mat4 PhysicsUtil::pxToGlmMat4(physx::PxMat44 nvMat){
     return glm::mat4 {
         nvMat.column0.x,

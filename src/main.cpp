@@ -20,12 +20,10 @@ int main(int argc, char** argv) {
         // Delta Time
         updateDt(deltaTime);
 
-        // Simulate physics
+        // Simulate physics and render graphics
         physics.simulate(scene);
-
-        // Scene Renderering and input
         renderer.renderScene(scene);
-        Input::processKeyboard(window, &renderer, &physics);
+        Input::processKeyboard(window, &scene, &renderer, &physics);
 
         // Glfw
         glfwSwapBuffers(window);

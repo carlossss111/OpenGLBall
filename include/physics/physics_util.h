@@ -14,5 +14,6 @@ namespace PhysicsUtil{
     float radianToDegree(float rad);
     float degreeToRadian(float deg);
     physx::PxVec3 glmToPxVec3(glm::vec3 vec);
+    glm::vec3 pxToGlmVec3(physx::PxVec3 vec);
     glm::mat4 pxToGlmMat4(physx::PxMat44 matrix);
 };

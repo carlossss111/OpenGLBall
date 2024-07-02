@@ -1,7 +1,7 @@
 #include "input/camera_types/model_viewer.h"
 
 ModelViewerCamera::ModelViewerCamera(const float& deltaTime) : Camera(deltaTime){
-    mType = "model_viewer";
+    mName = "";
 	mPosition = glm::vec3(0.f, 0.f, 0.f);
 	mYaw = 0.f;
 	mPitch = 20.f;
@@ -10,7 +10,7 @@ ModelViewerCamera::ModelViewerCamera(const float& deltaTime) : Camera(deltaTime)
 }
 
 // Init at position
-ModelViewerCamera::ModelViewerCamera(const float& deltaTime, glm::vec3 target, glm::vec2 rotation) : ModelViewerCamera(deltaTime) {
+ModelViewerCamera::ModelViewerCamera(const float& deltaTime, glm::vec3 target, glm::vec2 rotation, std::string name) : ModelViewerCamera(deltaTime) {
 	mYaw = rotation.x;
 	mPitch = rotation.y;
 
@@ -21,6 +21,8 @@ ModelViewerCamera::ModelViewerCamera(const float& deltaTime, glm::vec3 target, g
     mFront = glm::normalize(target - mPosition);
 	mRight = glm::normalize(glm::cross(mFront, mWorldUp));
 	mUp = glm::normalize(glm::cross(mRight, mFront));
+
+	mName = name;
 }
 
 // Model Viewer Movement
