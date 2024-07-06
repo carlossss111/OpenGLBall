@@ -19,5 +19,5 @@ Ball                sphere/sphere.bmp               Sphere
 # Valid Tags: "hidden", "player", "tiltable".
 
 # Name              Position        Rotation        Scale                   Tags
-n:Ball              p:0,4,0         r:80,0,45                               t:{player}
-n:Stage             p:0,-0.1,0      r:270,0,90      s:0.4, 0.4, 0.4         t:{tiltable}
+n:Ball              p:0,2,0         r:80,0,45                               t:{player}
+n:Stage             p:-8,-0.1,0     r:0,0,0      s:0.4, 0.4, 0.4         t:{tiltable}

@@ -5,7 +5,3 @@ out/
 # IDE
 .vs
 .vscode
-
-# Blender
-*.blend
-*.blend1
