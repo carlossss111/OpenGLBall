@@ -7,7 +7,7 @@ class SphereModel : public Model {
 private:
 	float mSectorCount = 36.f;
 	float mStackCount = 18.f;
-	float mRadius = 0.5f;
+	float mRadius = 0.8f;
 
 public:
 	SphereModel(std::string textureDirectoryPath, std::string textureFilePath);

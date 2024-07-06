@@ -78,6 +78,8 @@ void Physics::initPlayerPhysics(SphereModel* model){
         PhysicsUtil::matrixToQuaternion(PhysicsUtil::glmToPxMat4(model->getRotationMat()))
     ));
     mPhysicsScene->addActor(*mPlayerRB);
+
+    mPlayerRB->setMass(PHYSICS_BALL_WEIGHT);
 }
 
 void Physics::initTrianglePhysics(Model* model){
@@ -117,8 +119,8 @@ void Physics::initTrianglePhysics(Model* model){
 }
 
 physx::PxVec3T<float> calculateNextTiltAngle(physx::PxVec3 addedTilt){
-    static const float maxRoll = PhysicsUtil::degreeToRadian(30.f);
-    static const float maxYaw = PhysicsUtil::degreeToRadian(30.f);
+    static const float maxRoll = PhysicsUtil::degreeToRadian(PHYSICS_MAX_TILT);
+    static const float maxYaw = PhysicsUtil::degreeToRadian(PHYSICS_MAX_TILT);
     static const float tiltSpeed = 0.01f;
     static const float untiltSpeed = 0.005f;
     static physx::PxVec3 targetTilt = physx::PxVec3(0.f, 0.f, 0.f);
@@ -286,7 +288,7 @@ void Physics::simulate(Scene& renderScene){
         Model* model = (*tiltable).second;
         physx::PxVec3 initialPos = mInitialPositions.at(rigidbody).p;
         physx::PxMat44 finalMatrix = tiltMatrix * physx::PxTransform(mInitialPositions.at(rigidbody));
-        rigidbody->setKinematicTarget(physx::PxTransform(finalMatrix));
+        rigidbody->setGlobalPose(physx::PxTransform(finalMatrix));
 
         // Render
         physx::PxTransform baseTransform = rigidbody->getGlobalPose();

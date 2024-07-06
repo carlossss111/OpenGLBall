@@ -42,10 +42,6 @@ physx::PxTriangleMeshGeometry PhysicsCooking::createTriangleGeometry(Model* glMo
    // Add preprocessing parameters
    physx::PxTolerancesScale scale;
    physx::PxCookingParams params(scale);
-#ifdef DEBUG_GL
-   // Apply when wanting no vertices to be removed
-   params.meshPreprocessParams.raise(physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH);
-#endif
    params.meshPreprocessParams.raise(physx::PxMeshPreprocessingFlag::eFORCE_32BIT_INDICES);
 
    // Let it cook

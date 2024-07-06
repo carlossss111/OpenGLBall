@@ -15,6 +15,9 @@
 #define PHYSICS_TILTABLE_TAG "tiltable"
 #define PHYSICS_PLAYER_TAG "player"
 
+#define PHYSICS_MAX_TILT 15.f
+#define PHYSICS_BALL_WEIGHT 10.f
+
 class Physics{
 private:
     const float& mDeltaTime;

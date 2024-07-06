@@ -39,9 +39,9 @@ void Model::setRotation(glm::mat4 rotIn) {
 
 void Model::setRotation(glm::vec3 rotIn) {
 	glm::mat4 rotMat = glm::mat4(1.f);
-	rotMat = glm::rotate(rotMat, rotIn.x, glm::vec3(1.f, 0.f, 0.f));
-	rotMat = glm::rotate(rotMat, rotIn.y, glm::vec3(0.f, 1.f, 0.f));
-	rotMat = glm::rotate(rotMat, rotIn.z, glm::vec3(0.f, 0.f, 1.f));
+	rotMat = glm::rotate(rotMat, glm::radians(rotIn.x), glm::vec3(1.f, 0.f, 0.f));
+	rotMat = glm::rotate(rotMat, glm::radians(rotIn.y), glm::vec3(0.f, 1.f, 0.f));
+	rotMat = glm::rotate(rotMat, glm::radians(rotIn.z), glm::vec3(0.f, 0.f, 1.f));
 	setRotation(rotMat);
 }
 
