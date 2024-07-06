@@ -35,4 +35,7 @@ public:
 
 	Mesh(std::vector<Vertex> verts, std::vector<unsigned int> indices, std::vector<Texture> textures);
 	void draw(Shader* shader) const;
+
+	std::vector<Vertex> getVerts() const;
+	std::vector<unsigned int> getIndices() const;
 };

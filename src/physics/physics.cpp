@@ -40,7 +40,7 @@ Physics::Physics(const float& deltaTime, const Scene& renderScene) :
     // Check for player & base
     for (auto model = renderScene.begin(); model != renderScene.end(); ++model) {
         if((*model)->hasTag(PHYSICS_TILTABLE_TAG)){
-            initBasePhysics(*model);
+            initTrianglePhysics(*model);
         }
     }
     Model* model;
@@ -80,22 +80,32 @@ void Physics::initPlayerPhysics(SphereModel* model){
     mPhysicsScene->addActor(*mPlayerRB);
 }
 
-void Physics::initBasePhysics(Model* model){
+void Physics::initTrianglePhysics(Model* model){
     const physx::PxShapeFlags shapeFlags = physx::PxShapeFlag::eSCENE_QUERY_SHAPE | physx::PxShapeFlag::eSIMULATION_SHAPE;
-    const physx::PxBoxGeometry geometry(model->getScaleVec().x/2, model->getScaleVec().y/2, model->getScaleVec().z/2);
+    const physx::PxTriangleMeshGeometry geometry = PhysicsCooking::createTriangleGeometry(model, mPhysics, true);
+    const physx::PxTriangleMeshGeometry geometryInverted = PhysicsCooking::createTriangleGeometry(model, mPhysics, false);
     physx::PxMaterial* material = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-    physx::PxShape* boxShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
+    
+    // For the time being, it is just easiest to have two different shapes, one with an inverted normal. This means that
+    // e.g. both sides of a box (inside and outside) have collisions.
+    // To do: A future fix would only have one shape facing outside by figuring out the order of vertices based on their normals. Right now though that's a lot of effort.
+    physx::PxShape* triShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
+    physx::PxShape* triShapeInverted = mPhysics->createShape(geometryInverted, *material, true, shapeFlags);
+    if(!triShape || !triShapeInverted){
+        material->release();
+        return;
+    }
 
     physx::PxRigidDynamic* rigidBody;
     rigidBody = mPhysics->createRigidDynamic(
         physx::PxTransform(PhysicsUtil::glmToPxVec3(model->getPositionVec()))
     );
-    rigidBody->attachShape(*boxShape);
-    
-    // Remove gravity and set as kinematic target
     rigidBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
+    rigidBody->attachShape(*triShape);
+    rigidBody->attachShape(*triShapeInverted);
 
-    boxShape->release();
+    triShape->release();
+    triShapeInverted->release();
     material->release();
 
     mInitialPositions.insert_or_assign(rigidBody, physx::PxTransform(

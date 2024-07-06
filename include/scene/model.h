@@ -53,6 +53,8 @@ public:
 	virtual bool hasTag(std::string) const;
 	virtual std::set<std::string> getTags() const;
 
+	virtual std::vector<Mesh> getMeshes() const;
+
 private:
 	virtual void positionRotateScale(Shader* shader) const;
 };

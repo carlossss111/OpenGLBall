@@ -69,3 +69,11 @@ void Mesh::draw(Shader* shader) const{
     glBindVertexArray(mVAO);
     glDrawElements(GL_TRIANGLES, (GLsizei)(mIndices.size()), GL_UNSIGNED_INT, 0);
 }
+
+std::vector<Vertex> Mesh::getVerts() const {
+    return mVerts;
+}
+
+std::vector<unsigned int> Mesh::getIndices() const {
+    return mIndices;
+}

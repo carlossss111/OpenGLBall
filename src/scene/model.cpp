@@ -101,3 +101,7 @@ bool Model::hasTag(std::string tag) const {
 std::set<std::string> Model::getTags() const {
 	return mTags;
 }
+
+std::vector<Mesh> Model::getMeshes() const {
+	return mMeshes;
+}

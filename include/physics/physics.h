@@ -7,6 +7,7 @@
 #include <PxPhysicsAPI.h>
 
 #include "physics/physics_util.h"
+#include "physics/cooking.h"
 
 #include "scene/scene.h"
 
@@ -40,5 +41,5 @@ public:
     void reset();
 private:
     void initPlayerPhysics(SphereModel* model);
-    void initBasePhysics(Model* model);
+    void initTrianglePhysics(Model* model);
 };
