@@ -43,6 +43,6 @@ public:
     void addTilt(float tiltAxis, float addedRoll, float addedYaw);
     void reset();
 private:
-    void initPlayerPhysics(SphereModel* model);
+    void initPlayerPhysics(Model* model);
     void initTrianglePhysics(Model* model);
 };

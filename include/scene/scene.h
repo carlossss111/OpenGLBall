@@ -5,6 +5,7 @@
 #include <set>
 
 #include "render/shader.h"
+#include "input/camera.h"
 #include "scene/scene_loader.h"
 
 class Scene : public std::list<Model*> {
@@ -16,7 +17,7 @@ public:
 	~Scene();
 
 	Model* get(std::string tag) const; //nullable
-	void drawAll(Shader* shader) const;
+	void drawAll(Shader* shader, Camera* camera = nullptr) const;
 
 	void push_back(const value_type& __x) {
 		mModelList.push_back(__x);

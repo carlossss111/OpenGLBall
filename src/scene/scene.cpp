@@ -23,8 +23,33 @@ Model* Scene::get(std::string targetTag) const {
     return nullptr;
 }
 
-void Scene::drawAll(Shader* shader) const {
-    for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
-        (*model)->draw(shader);
+void Scene::drawAll(Shader* shader, Camera* camera) const {
+    if(camera){
+        // Seperate into types
+        std::map<float, Model*> transparentModels;
+        std::list<Model*> opaqueModels;
+        for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
+            if((*model)->hasTag("transparent")){
+                glm::vec3 v = camera->getPosition() - (*model)->getPositionVec();
+                float l = glm::length(v);
+                transparentModels[l] = *model;
+            }
+            else{
+                opaqueModels.push_back(*model);
+            }
+        }
+
+        // Draw in order
+        for (auto model = opaqueModels.begin(); model != opaqueModels.end(); ++model) {
+            (*model)->draw(shader);
+        }
+        for (auto model = transparentModels.rbegin(); model != transparentModels.rend(); ++model) {
+            model->second->draw(shader);
+        }
+    }
+    else {
+        for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
+            (*model)->draw(shader);
+        }
     }
 }

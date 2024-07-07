@@ -9,10 +9,6 @@
 #define FOLLOW_CAMERA "follow"
 #define STAGE_CAMERA "stageview"
 
-#ifdef DEBUG_CAMERA
-#include "scene/scene.h"
-#endif
-
 class CameraManager {
 private:
     std::vector<Camera*> mCameraList;

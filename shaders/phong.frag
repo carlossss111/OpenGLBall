@@ -79,9 +79,9 @@ vec3 calculateDirectionalLight() {
 }
 
 void main() {
-	float diffTransparency = texture(material.diffuse, fTex).a;
-    if(diffTransparency < 0.1f){
+	float transparency = texture(material.diffuse, fTex).a;
+    if(transparency < 0.1f){
 		discard;
 	}
-	fColour = vec4(calculateDirectionalLight(), 1.f);
+	fColour = vec4(calculateDirectionalLight(), transparency);
 }

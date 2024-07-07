@@ -75,9 +75,15 @@ void Renderer::renderScene(const Scene& sceneRef) {
     mainShader->setMat4("view", view);
     mainShader->setMat4("projection", projection);
 
+    // Transparency Blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     // Draw
     mainShader->use();
-    sceneRef.drawAll(mainShader);
+    sceneRef.drawAll(mainShader, camera);
 
     // Debug
 #ifdef DEBUG_GL

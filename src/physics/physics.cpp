@@ -45,7 +45,8 @@ Physics::Physics(const float& deltaTime, const Scene& renderScene) :
     }
     Model* model;
     if(model = renderScene.get(PHYSICS_PLAYER_TAG)){
-        initPlayerPhysics(dynamic_cast<SphereModel*>(model));
+        initPlayerPhysics(model);
+        //initPlayerPhysics(dynamic_cast<SphereModel*>(model));
     }
 }
 
@@ -59,9 +60,9 @@ Physics::~Physics(){
     mFoundation->release();
 }
 
-void Physics::initPlayerPhysics(SphereModel* model){
+void Physics::initPlayerPhysics(Model* model){
     const physx::PxShapeFlags shapeFlags = physx::PxShapeFlag::eSCENE_QUERY_SHAPE | physx::PxShapeFlag::eSIMULATION_SHAPE;
-    const physx::PxSphereGeometry geometry(model->getRadius());
+    const physx::PxSphereGeometry geometry(model->getScaleVec().x);
     physx::PxMaterial* material = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
     physx::PxShape* sphereShape = mPhysics->createShape(geometry, *material, true, shapeFlags);
 

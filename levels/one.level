@@ -6,18 +6,18 @@ White_Oak           white_oak/white_oak.obj
 Backpack            backpack/backpack.obj
 Cylinder            cylinder/cylinder.obj
 Stage               stage/stage1.obj
+GlBall              ball/glball.obj
 
 # === Procedural === 
 # Name              Texture Path                    C++ Object
 Crate               cube/container.png              Cube
 Floor               cube/checkers.png               CheckeredCube
-Ball                sphere/sphere.bmp               Sphere
 
 !Level
 
 # ===   Level    ===
-# Valid Tags: "hidden", "player", "tiltable".
+# Valid Tags: "hidden", "player", "tiltable", "transparent"
 
 # Name              Position        Rotation        Scale                   Tags
-n:Ball              p:0,2,0         r:80,0,45                               t:{player}
-n:Stage             p:-8,-0.1,0     r:0,0,0      s:0.4, 0.4, 0.4         t:{tiltable}
+n:Stage             p:0,-0.1,0                      s:0.4, 0.4, 0.4         t:{tiltable}
+n:GlBall            p:5,2,0                         s:0.8,0.8,0.8           t:{player,transparent}
