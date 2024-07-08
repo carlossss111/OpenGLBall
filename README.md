@@ -1,4 +1,4 @@
-# So-far-unnamed Graphics Project
+# GlBall Graphics & Physics Project
 
 The aim of this project is to use OpenGL to render a ball, a platform and maybe some scenery.
 The level should tilt to roll the ball, like the game Super Monkey Ball.
@@ -20,12 +20,20 @@ cmake ..
 make -j 8 
 ```
 
-## Recent Progress
-Very work-in-progress currently! Demo coming soon TM.
-* Draws procedural and loaded models to the screen.
-* Level editor.
-* Lighting, Shadows, Camera.
-* Physics with ball and plane.
+## Progress so far
+WASD to tilt the board. Arrow keys to move the camera. Q to reset the ball (to-do: fix needing to do this after starting), Space to move the position of the lightsource to the camera, C to change between follow and stage camera.
+
+![Follow GIF](demo1.gif)
+![Stage GIF](demo2.gif)
+
+(lag is from recording)
+
+* Phong lighting, shadows, blending & skybox
+* Level loader and editor
+* Camera Controls and debug view
+* Ball physics with per-triangle collisions
+* Board tilt matrix calculations
+* and more in the works!
 
 
 ## Libraries

@@ -97,6 +97,7 @@ void Renderer::renderScene(const Scene& sceneRef) {
 
     // Debug
 #ifdef DEBUG_GL
+    glDisable(GL_CULL_FACE);
     lineShader->use();
     lineShader->setMat4("view", view);
     lineShader->setMat4("projection", projection);
@@ -105,6 +106,7 @@ void Renderer::renderScene(const Scene& sceneRef) {
     renderCameraFrustum();
     mainShader->use();
     renderCameraBox();
+    glEnable((GL_CULL_FACE));
 #endif
 #endif
 }
