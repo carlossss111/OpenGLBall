@@ -8,6 +8,7 @@
 #define MAIN_SHADER "main"
 #define SHADOW_SHADER "shadow"
 #define LINE_SHADER "line"
+#define SKYBOX_SHADER "skybox"
 
 class ShaderManager {
 private:

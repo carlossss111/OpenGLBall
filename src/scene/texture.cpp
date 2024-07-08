@@ -5,7 +5,6 @@
 
 GLuint PreRender::createTexture(std::string filename, bool linearFilter) {
 	stbi_set_flip_vertically_on_load(true);
-	glEnable(GL_BLEND);
 
 	GLuint tex_object;
 	glGenTextures(1, &tex_object);
@@ -40,7 +39,31 @@ GLuint PreRender::createTexture(std::string filename, bool linearFilter) {
 
 	stbi_image_free(pxls);
 
-	glDisable(GL_BLEND);
-
 	return tex_object;
+}
+
+GLuint PreRender::createCubemap(std::vector<std::string> faces) {
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	int width, height, channels;
+	for (unsigned int i = 0; i < faces.size(); i++) {
+		unsigned char* pxls = stbi_load(faces[i].c_str(), &width, &height, &channels, 0);
+		if (pxls != NULL) {
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pxls);
+		}
+		else {
+			printf("Failed to load %s\n", faces[i].c_str());
+		}
+		stbi_image_free(pxls);
+	}
+
+    return textureID;
 }

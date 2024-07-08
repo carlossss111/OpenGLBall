@@ -36,7 +36,8 @@ void Shadow::createDepthMap(const Scene& scene, glm::mat4 projectedLightSpace, i
 	glViewport(0, 0, mDepthMapWidth, mDepthMapHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	scene.drawAll(mShadowShader);
+	scene.drawAllOpaque(mShadowShader);
+	scene.drawAllTransparency(mShadowShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Reset to previous

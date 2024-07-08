@@ -7,17 +7,21 @@
 #include "render/shader.h"
 #include "input/camera.h"
 #include "scene/scene_loader.h"
+#include "scene/skybox.h"
 
 class Scene : public std::list<Model*> {
 private:
 	std::list<Model*> mModelList;
+	Skybox mSkybox;
 
 public:
 	Scene();
 	~Scene();
 
 	Model* get(std::string tag) const; //nullable
-	void drawAll(Shader* shader, Camera* camera = nullptr) const;
+	void drawAllTransparency (Shader* shader, Camera* camera = nullptr) const;
+	void drawAllOpaque(Shader* shader) const;
+	void drawSkybox(Shader* shader) const;
 
 	void push_back(const value_type& __x) {
 		mModelList.push_back(__x);

@@ -21,6 +21,12 @@ void PreRender::initGl() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
 
+    // Blending & culling
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     // Enable Debug Messages
 #ifdef DEBUG_GL
     glEnable(GL_DEBUG_OUTPUT);
@@ -41,7 +47,7 @@ Renderer::Renderer(const float& deltaTime) :
         glm::vec3(0.2f, 0.2f, 0.2f),
         glm::vec3(0.5f, 0.5f, 0.5f),
         glm::vec3(1.0f, 1.0f, 1.0f))
-    ) 
+    )
 {};
 
 void Renderer::renderScene(const Scene& sceneRef) {
@@ -49,6 +55,7 @@ void Renderer::renderScene(const Scene& sceneRef) {
     Shader* mainShader = mShaderManager.get(MAIN_SHADER);
     Shader* shadowShader = mShaderManager.get(SHADOW_SHADER);
     Shader* lineShader = mShaderManager.get(LINE_SHADER);
+    Shader* skyboxShader = mShaderManager.get(SKYBOX_SHADER);
 
     // Set Lighting
     mainShader->use();
@@ -68,22 +75,25 @@ void Renderer::renderScene(const Scene& sceneRef) {
     mainShader->setInt("depthMap", 10);
     glBindTexture(GL_TEXTURE_2D, mShadow.getDepthMap());
 
-    // View and Perspective Matrices
+    // Main View and Perspective Matrices
     Camera* camera = mCameraManager.getCurrentCamera();
     glm::mat4 view = camera->calculateView();
     glm::mat4 projection = camera->calculateProjection(ASPECT_RATIO());
     mainShader->setMat4("view", view);
     mainShader->setMat4("projection", projection);
 
-    // Transparency Blending
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    // Skybox Matrices
+    skyboxShader->use();
+    skyboxShader->setMat4("view", glm::mat4(glm::mat3(view))); // removes translation from matrix
+    skyboxShader->setMat4("projection", projection);
 
-    // Draw
+    // Draw in the correct order of (1) opaque, (2) skybox, (3) transparents.
     mainShader->use();
-    sceneRef.drawAll(mainShader, camera);
+    sceneRef.drawAllOpaque(mainShader);
+    skyboxShader->use();
+    sceneRef.drawSkybox(skyboxShader);
+    mainShader->use();
+    sceneRef.drawAllTransparency(mainShader, camera);
 
     // Debug
 #ifdef DEBUG_GL

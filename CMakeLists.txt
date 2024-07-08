@@ -41,6 +41,8 @@ set(SHADERS
 	shaders/depth.vert
 	shaders/line.frag
 	shaders/line.vert
+	shaders/skybox.vert
+	shaders/skybox.frag
 )
 
 # Debug Settings

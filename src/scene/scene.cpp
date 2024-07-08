@@ -1,6 +1,6 @@
 #include "scene/scene.h"
 
-Scene::Scene() {
+Scene::Scene() : mSkybox("./models/skybox/") {
     SceneLoader loader(LEVEL_DIR, "one.level", MODEL_DIR);
     loader.load(&mModelList);
 }
@@ -23,33 +23,40 @@ Model* Scene::get(std::string targetTag) const {
     return nullptr;
 }
 
-void Scene::drawAll(Shader* shader, Camera* camera) const {
-    if(camera){
-        // Seperate into types
-        std::map<float, Model*> transparentModels;
-        std::list<Model*> opaqueModels;
+void Scene::drawAllTransparency (Shader* shader, Camera* camera) const {
+    if (!camera){
+        // For, e.g. shadow mapping where camera is not used
         for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
             if((*model)->hasTag("transparent")){
-                glm::vec3 v = camera->getPosition() - (*model)->getPositionVec();
-                float l = glm::length(v);
-                transparentModels[l] = *model;
-            }
-            else{
-                opaqueModels.push_back(*model);
+                (*model)->draw(shader);
             }
         }
+        return;
+    }
 
-        // Draw in order
-        for (auto model = opaqueModels.begin(); model != opaqueModels.end(); ++model) {
-            (*model)->draw(shader);
-        }
-        for (auto model = transparentModels.rbegin(); model != transparentModels.rend(); ++model) {
-            model->second->draw(shader);
-        }
-    }
-    else {
-        for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
-            (*model)->draw(shader);
+    // Order must be furthest from the camera first
+    std::map<float, Model*> transparentModels;
+    for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
+        if((*model)->hasTag("transparent")){
+            glm::vec3 v = camera->getPosition() - (*model)->getPositionVec();
+            float l = glm::length(v);
+            transparentModels[l] = *model;
         }
     }
+    for (auto model = transparentModels.rbegin(); model != transparentModels.rend(); ++model) {
+        model->second->draw(shader);
+    }
+}
+
+void Scene::drawAllOpaque(Shader* shader) const {
+    // Order doesn't matter
+    for (auto model = mModelList.begin(); model != mModelList.end(); ++model) {
+        if(!((*model)->hasTag("transparent"))){
+            (*model)->draw(shader);
+        }
+    }
+}
+
+void Scene::drawSkybox(Shader* shader) const {
+    mSkybox.draw(shader);
 }
