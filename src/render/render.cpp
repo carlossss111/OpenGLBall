@@ -43,10 +43,11 @@ Renderer::Renderer(const float& deltaTime) :
     )),
     mShadow(Shadow(mShaderManager.get(SHADOW_SHADER), 2048, 2048)),
     mLight(Light(
-        glm::vec3(1.2f, 10.0f, 2.0f),
-        glm::vec3(0.2f, 0.2f, 0.2f),
-        glm::vec3(0.5f, 0.5f, 0.5f),
-        glm::vec3(1.0f, 1.0f, 1.0f))
+        glm::vec3(5.f, 14.0f, -6.0f),   // Pos
+        glm::vec3(0.f, -0.90f, 0.30f),  // Dir
+        glm::vec3(0.2f, 0.2f, 0.2f),    // Ambient
+        glm::vec3(0.5f, 0.5f, 0.5f),    // Diffuse
+        glm::vec3(1.0f, 1.0f, 1.0f))    // Specular
     )
 {};
 
@@ -64,7 +65,7 @@ void Renderer::renderScene(const Scene& sceneRef) {
     // Draw Depth Map
     shadowShader->use();
     glCullFace(GL_FRONT);
-    glm::mat4 projectedLightSpace = mShadow.calcProjectedLightSpace(mLight.pos);
+    glm::mat4 projectedLightSpace = mShadow.calcProjectedLightSpace(mLight);
     mShadow.createDepthMap(sceneRef, projectedLightSpace, Window::width, Window::height);
     glCullFace(GL_BACK);
 

@@ -21,3 +21,4 @@ Floor               cube/checkers.png               CheckeredCube
 # Name              Position        Rotation        Scale                   Tags
 n:Stage             p:0,-0.1,0                      s:0.4, 0.4, 0.4         t:{tiltable}
 n:GlBall            p:5,2,0                         s:0.8,0.8,0.8           t:{player,transparent}
+n:White_Oak                                         s:0.005,0.005, 0.005    t:{tiltable,transparent}

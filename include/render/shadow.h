@@ -5,6 +5,7 @@
 
 #include "render/shader.h"
 #include "render/window.h"
+#include "render/light.h"
 
 #include "scene/scene.h"
 
@@ -19,6 +20,6 @@ private:
 public:
 	Shadow(Shader* shadowShader, int depthMapWidth, int depthMapHeight);
 	unsigned int getDepthMap();
-	glm::mat4 calcProjectedLightSpace(glm::vec3 lightPosition);
+	glm::mat4 calcProjectedLightSpace(Light light);
 	void createDepthMap(const Scene& scene, glm::mat4 projectedLightSpace, int windowWidth, int windowHeight);
 };

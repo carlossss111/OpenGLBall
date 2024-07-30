@@ -16,6 +16,7 @@ struct Material {
 
 struct Light {
 	vec3 position;
+	vec3 direction;
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -33,7 +34,7 @@ float calculateShadow() {
 	float currentDepth = projCoords.z;
 
 	vec3 normal = normalize(fNor);
-	vec3 lightDir = normalize(light.position - fPos);
+	vec3 lightDir = -normalize(light.direction);
 	float bias = max(0.05f * (1.f - dot(normal, lightDir)), 0.005f);
 
 	float shadow = 0.0f;
@@ -59,7 +60,7 @@ vec3 calculateDirectionalLight() {
 
 	// Diffuse
 	vec3 norm = normalize(fNor);
-	vec3 lightDir = normalize(light.position - fPos);
+	vec3 lightDir = -normalize(light.direction);
 	float diff = max(dot(norm, lightDir), 0.f);
 	vec3 diffuse = light.diffuse * diff * texture(material.diffuse, fTex).rgb;
 

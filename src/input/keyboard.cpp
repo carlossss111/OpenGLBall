@@ -127,6 +127,7 @@ void actionMisc(GLFWwindow* window, Renderer* renderer, Physics* physics) {
 	// Light
 	if ON_KEY(GLFW_KEY_SPACE) {
 		light->pos = currentCamera->getPosition();
+		light->direction = currentCamera->getFront();
 	}
 	// Change camera
 	static float timeout = 0.f;
@@ -156,7 +157,7 @@ void Input::processKeyboard(GLFWwindow* window, Scene* scene, Renderer* renderer
 		// if(cameraManager->isCurrent(FOLLOW_CAMERA)){
 		// 	savedControl = cameraControl;
 		// }
-		// camera->addDistance(savedControl.distance);
+		camera->addDistance(cameraControl.distance);
 		// camera->moveAndOrientCamera(
 		// 	playerPos, glm::vec2(savedControl.offsetX, savedControl.offsetY));
 		// 			camera->addDistance(savedControl.distance);
