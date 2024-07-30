@@ -46,7 +46,7 @@ void ModelViewerCamera::moveAndOrientCamera(glm::vec3 target, glm::vec2 rotOffse
 	mRight = glm::normalize(glm::cross(mFront, mWorldUp));
 	mUp = glm::normalize(glm::cross(mRight, mFront));
 
-#ifdef DEBUG_CAMERA
+#ifdef DEBUG_CAMERA_POSITION
 	printf("pos_x: %.2f, pos_y: %.2f, pos_z: %.2f\n", mPosition.x, mPosition.y, mPosition.z);
 	printf("yaw: %.2f, pitch: %.2f\n", mYaw, mPitch);
 	printf("front_x: %.2f, front_y: %.2f, front_z: %.2f\n", mFront.x, mFront.y, mFront.z);

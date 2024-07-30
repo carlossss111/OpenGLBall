@@ -37,9 +37,10 @@ void PreRender::initGl() {
 Renderer::Renderer(const float& deltaTime) : 
     mDeltaTime(deltaTime),
     mShaderManager(ShaderManager()),
-    mCameraManager(CameraManager(2,
+    mCameraManager(CameraManager(3,
         new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 20.f), FOLLOW_CAMERA),
-        new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 40.f), STAGE_CAMERA)
+        new ModelViewerCamera(deltaTime, glm::vec3(0, 0, 0), glm::vec2(0.f, 40.f), STAGE_CAMERA),
+        new FlythroughCamera(deltaTime, glm::vec3(-20.f,3.f,0.f), glm::vec3(1.f, 0.f, 0.f), FLYTHROUGH_CAMERA)
     )),
     mShadow(Shadow(mShaderManager.get(SHADOW_SHADER), 2048, 2048)),
     mLight(Light(

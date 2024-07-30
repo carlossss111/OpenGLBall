@@ -6,6 +6,7 @@
 
 #include "render/render.h"
 #include "input/camera_types/model_viewer.h"
+#include "input/camera_types/flythrough.h"
 
 namespace Input {
 	void processKeyboard(GLFWwindow* window, Scene* scene, Renderer* renderer, Physics* physics);

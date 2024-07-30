@@ -11,6 +11,7 @@ _|"""""|_|"""""|_|"""""| {======|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""
 [ ] add skeletal animation classes
 [ ] fix the diagonal tilt being too tilt-y
 [ ] make the camera rotate depending on movement
+[x] add fly-through debug camera
 [ ] add controller support
 [ ] create new levels
 [ ] get a much better skybox that has clouds below it

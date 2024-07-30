@@ -8,6 +8,7 @@
 
 #define FOLLOW_CAMERA "follow"
 #define STAGE_CAMERA "stageview"
+#define FLYTHROUGH_CAMERA "flythrough"
 
 class CameraManager {
 private:

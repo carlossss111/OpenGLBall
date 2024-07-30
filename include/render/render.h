@@ -17,6 +17,7 @@
 
 #include "input/camera_manager.h"
 #include "input/camera_types/model_viewer.h"
+#include "input/camera_types/flythrough.h"
 
 #include "scene/scene.h"
 #include "scene/model.h"
