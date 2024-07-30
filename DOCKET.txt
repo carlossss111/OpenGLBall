@@ -40,3 +40,5 @@ _|"""""|_|"""""|_|"""""|_|"""""|
 [ ] shadow inside of the ball
 [ ] ball gets stuck if not moved at startup
 [ ] ball flings off when fast
+[ ] suppress memory leaks from X11 (unrelated to user code)
+[ ] ball falls through floor if deltaT is too large
