@@ -17,7 +17,7 @@ class Shader {
 private:
 	GLuint mProgramID;
 public:
-	Shader(std::string vsFilename, std::string fsFilename);
+	Shader(std::string vsFilename, std::string fsFilename, std::string gsFilename = "");
 	~Shader();
 
 	void use() const;

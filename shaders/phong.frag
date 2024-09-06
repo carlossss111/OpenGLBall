@@ -3,7 +3,6 @@
 in vec3 fPos;
 in vec3 fNor;
 in vec2 fTex;
-in vec4 fLightSpace;
 
 out vec4 fColour;
 
@@ -25,23 +24,55 @@ struct Light {
 uniform vec3 cameraPos;
 uniform Material material;
 uniform Light light;
-uniform sampler2D depthMap;
+uniform sampler2DArray depthMap;
+
+uniform mat4 view;
+uniform float farPlane;
+layout (std140) uniform LightSpaceMatrices
+{
+    mat4 lightSpaceMatrices[16];
+};
+uniform float cascadePlaneDistances[16];
+uniform int cascadeCount;
 
 float calculateShadow() {
-	vec3 projCoords = fLightSpace.xyz / fLightSpace.w;
+	// Cascade Layer Logic
+	vec4 fragPosViewSpace = view * vec4(fPos, 1.f);
+	float depthValue = abs(fragPosViewSpace.z);
+
+	int layer = -1;
+	for (int i = 0; i < cascadeCount; ++i){
+		if (depthValue < cascadePlaneDistances[i]){
+			layer = i;
+			break;
+		}
+	}
+	if (layer == -1){
+		layer = cascadeCount;
+	}
+
+	vec4 fragPosLightSpace = lightSpaceMatrices[layer] * vec4(fPos, 1.f);
+
+	// Shadow Calculations
+	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 	projCoords = projCoords * 0.5f + 0.5f;
-	float closestDepth = texture(depthMap, projCoords.xy).r;
 	float currentDepth = projCoords.z;
 
 	vec3 normal = normalize(fNor);
 	vec3 lightDir = -normalize(light.direction);
 	float bias = max(0.05f * (1.f - dot(normal, lightDir)), 0.005f);
+	if(layer == cascadeCount){
+		bias *= 1 / (farPlane * 0.5f);
+	}
+	else{
+		bias *= 1 / (cascadePlaneDistances[layer] * 0.5f);
+	}
 
 	float shadow = 0.0f;
-	vec2 texelSize = 1.f / textureSize(depthMap, 0);
+	vec2 texelSize = 1.f / vec2(textureSize(depthMap, 0));
 	for (int x = -1; x <= 1; ++x){
 		for(int y = -1; y <= 1; ++y){
-			float pcfDepth = texture(depthMap, projCoords.xy + vec2(x,y) * texelSize).r;
+			float pcfDepth = texture(depthMap, vec3(projCoords.xy + vec2(x,y) * texelSize, layer)).r;
 			shadow += currentDepth - bias > pcfDepth ? 1.f : 0.f;
 		}
 	}

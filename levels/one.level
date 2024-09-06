@@ -19,6 +19,16 @@ Floor               cube/checkers.png               CheckeredCube
 # Valid Tags: "hidden", "player", "tiltable", "transparent"
 
 # Name              Position        Rotation        Scale                   Tags
-n:Stage             p:0,-0.1,0                      s:0.4, 0.4, 0.4         t:{tiltable}
-n:GlBall            p:5,2,0                         s:0.8,0.8,0.8           t:{player,transparent}
-n:White_Oak                                         s:0.005,0.005, 0.005    t:{tiltable,transparent}
+#n:Stage             p:0,-0.1,0                      s:0.4, 0.4, 0.4         t:{tiltable}
+#n:GlBall            p:5,2,0                         s:0.8,0.8,0.8           t:{player,transparent}
+#n:White_Oak                                         s:0.005,0.005, 0.005    t:{tiltable,transparent}
+
+n:GlBall            p:5,2,1                         s:0.8,0.8,0.8           t:{player,transparent}
+n:Floor             p:0,-0.1,0                      s:100,0.1,100           t:{tiltable}
+n:Crate             p:3,0.4,0                                              t:{tiltable}
+n:Crate             p:1,0.4,0                                              t:{tiltable}
+n:Crate             p:-1,0.4,0                                              t:{tiltable}
+n:Crate             p:-3,0.4,0                                              t:{tiltable}
+n:Crate             p:-5,0.4,0                                              t:{tiltable}
+n:Crate             p:-7,0.4,0                                              t:{tiltable}
+n:Crate             p:-9,0.4,0                                              t:{tiltable}

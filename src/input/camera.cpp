@@ -20,13 +20,13 @@ Camera::Camera(const float& deltaTime) :
 
 
 // Projection and View Matrices
-glm::mat4 Camera::calculateView(){
+glm::mat4 Camera::calculateView() const {
 	return glm::lookAt(
 		mPosition, mPosition + mFront, mUp
     );
 }
 
-glm::mat4 Camera::calculateProjection(float aspectRatio){
+glm::mat4 Camera::calculateProjection(float aspectRatio) const {
 	glm::mat4 projection = glm::mat4(1.f);
     return glm::perspective(mFov, aspectRatio, mNearDistance, mFarDistance);
 }
@@ -66,15 +66,35 @@ std::string Camera::getName() const {
 	return mName;
 }
 
-#ifdef DEBUG_CAMERA
-void Camera::getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio) const {
-	float nearHeight = 2 * tan(mFov / 2) * mNearDistance;
-	float nearWidth = mNearDistance * aspectRatio;
-	float farHeight = 2 * tan(mFov / 2) * mFarDistance;
-	float farWidth = mFarDistance * aspectRatio;
+float Camera::getFarPlane() const {
+	return mFarDistance;
+}
 
-	glm::vec3 farCentre = mPosition + mFront * mFarDistance;
-	glm::vec3 nearCentre = mPosition + mFront * mNearDistance;
+float Camera::getNearPlane() const {
+	return mNearDistance;
+}
+
+float Camera::getFOV() const {
+	return mFov;
+}
+
+void Camera::getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio, 
+		float near, float far) const {
+	
+	if(near == -1.f){
+		near = mNearDistance;
+	}
+	if(far == -1.f){
+		far = mFarDistance;
+	}
+
+	float nearHeight = 2 * tan(mFov / 2) * near;
+	float nearWidth = near * aspectRatio;
+	float farHeight = 2 * tan(mFov / 2) * far;
+	float farWidth = far * aspectRatio;
+
+	glm::vec3 farCentre = mPosition + mFront * far;
+	glm::vec3 nearCentre = mPosition + mFront * near;
 
 	// Near Vertices
 	vertBuffer[0] = nearCentre + (mUp * nearHeight / 2.0f) - (mRight * nearWidth / 2.0f); // TL
@@ -86,6 +106,5 @@ void Camera::getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectR
 	vertBuffer[4] = farCentre + (mUp * farHeight / 2.0f) - (mRight * farWidth / 2.0f); // TL
 	vertBuffer[5] = farCentre + (mUp * farHeight / 2.0f) + (mRight * farWidth / 2.0f); // TR
 	vertBuffer[6] = farCentre - (mUp * farHeight / 2.0f) - (mRight * farWidth / 2.0f); // BL
-	vertBuffer[7] = farCentre - (mUp * farHeight / 2.0f) + (mRight * farWidth / 2.0f); //
+	vertBuffer[7] = farCentre - (mUp * farHeight / 2.0f) + (mRight * farWidth / 2.0f); // BR
 }
-#endif

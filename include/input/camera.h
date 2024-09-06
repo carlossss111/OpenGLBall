@@ -30,8 +30,8 @@ protected:
 	Camera(const float& deltaTime);
 
 public:
-	virtual glm::mat4 calculateView();
-	virtual glm::mat4 calculateProjection(float aspectRatio);
+	virtual glm::mat4 calculateView() const;
+	virtual glm::mat4 calculateProjection(float aspectRatio) const;
 
 	virtual void setDistance(float dist);
 	virtual void addDistance(float dist);
@@ -42,8 +42,10 @@ public:
 	virtual float getPitch() const;
 	virtual float getYaw() const;
 	virtual std::string getName() const;
+	virtual float getFarPlane() const;
+	virtual float getNearPlane() const;
+	virtual float getFOV() const;
 
-#ifdef DEBUG_CAMERA
-	virtual void getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio) const;
-#endif
+	virtual void getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio, 
+		float customNear = -1.f, float customFar = -1.f) const;
 };

@@ -39,6 +39,7 @@ set(SHADERS
 	shaders/phong.vert
 	shaders/depth.frag
 	shaders/depth.vert
+	shaders/depth.geom
 	shaders/line.frag
 	shaders/line.vert
 	shaders/skybox.vert

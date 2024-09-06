@@ -24,8 +24,8 @@ void PreRender::initGl() {
     // Blending & culling
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
 
     // Enable Debug Messages
 #ifdef DEBUG_GL
@@ -65,17 +65,18 @@ void Renderer::renderScene(const Scene& sceneRef) {
 
     // Draw Depth Map
     shadowShader->use();
-    glCullFace(GL_FRONT);
-    glm::mat4 projectedLightSpace = mShadow.calcProjectedLightSpace(mLight);
-    mShadow.createDepthMap(sceneRef, projectedLightSpace, Window::width, Window::height);
-    glCullFace(GL_BACK);
+    //glCullFace(GL_FRONT);
+    Camera* debugCam = mCameraManager.getCamera(FOLLOW_CAMERA);
+    const auto lightMatrices 
+        = mShadow.calcLightSpaceMatrices(mLight, debugCam, ASPECT_RATIO());
+    mShadow.createDepthMap(sceneRef, lightMatrices, Window::width, Window::height);
+    //glCullFace(GL_BACK);
 
     // Set lightspace and set depth map as texture
     mainShader->use();
-    mainShader->setMat4("projectedLightSpace", projectedLightSpace);
     glActiveTexture(GL_TEXTURE10); // texture unit otherwise not used
     mainShader->setInt("depthMap", 10);
-    glBindTexture(GL_TEXTURE_2D, mShadow.getDepthMap());
+    glBindTexture(GL_TEXTURE_2D_ARRAY, mShadow.getDepthMap());
 
     // Main View and Perspective Matrices
     Camera* camera = mCameraManager.getCurrentCamera();
@@ -83,6 +84,13 @@ void Renderer::renderScene(const Scene& sceneRef) {
     glm::mat4 projection = camera->calculateProjection(ASPECT_RATIO());
     mainShader->setMat4("view", view);
     mainShader->setMat4("projection", projection);
+
+    // More Shadow Related Uniforms
+    mainShader->setFloat("farPlane", camera->getFarPlane());
+    mainShader->setInt("cascadeCount", mShadow.getCascadeLevels().size());
+    for (size_t i = 0; i < mShadow.getCascadeLevels().size(); ++i) {
+        mainShader->setFloat("cascadePlaneDistances[" + std::to_string(i) + "]", mShadow.getCascadeLevels()[i]);
+    }
 
     // Skybox Matrices
     skyboxShader->use();
@@ -99,7 +107,7 @@ void Renderer::renderScene(const Scene& sceneRef) {
 
     // Debug
 #ifdef DEBUG_GL
-    glDisable(GL_CULL_FACE);
+    //glDisable(GL_CULL_FACE);
     lineShader->use();
     lineShader->setMat4("view", view);
     lineShader->setMat4("projection", projection);
@@ -108,7 +116,7 @@ void Renderer::renderScene(const Scene& sceneRef) {
     renderCameraFrustum();
     mainShader->use();
     renderCameraBox();
-    glEnable((GL_CULL_FACE));
+    //glEnable((GL_CULL_FACE));
 #endif
 #endif
 }

@@ -18,7 +18,7 @@ std::string readShader(std::string filename) {
     }
 }
 
-Shader::Shader(std::string vsFilename, std::string fsFilename) {
+Shader::Shader(std::string vsFilename, std::string fsFilename, std::string gsFilename) {
     char infoLog[512];
     int success;
     
@@ -48,10 +48,29 @@ Shader::Shader(std::string vsFilename, std::string fsFilename) {
         exit(1);
     }
 
+    // Geometry Shader
+    GLuint geometryShader;
+    if(gsFilename.compare("") != 0){
+        geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+        std::string geomText = readShader(gsFilename);
+        const char* geomSrc = geomText.c_str();
+        glShaderSource(geometryShader, 1, &geomSrc, NULL);
+        glCompileShader(geometryShader);
+        glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
+            fprintf(stderr, "Failed to compile Fragment Shader\n%s", infoLog);
+            exit(1);
+        }
+    }
+
     // Create shader program
     mProgramID = glCreateProgram();
     glAttachShader(mProgramID, vertexShader);
     glAttachShader(mProgramID, fragmentShader);
+    if(gsFilename.compare("") != 0) {
+        glAttachShader(mProgramID, geometryShader);
+    }
     glLinkProgram(mProgramID);
     glGetProgramiv(mProgramID, GL_LINK_STATUS, &success);
     if (!success) {
@@ -62,7 +81,9 @@ Shader::Shader(std::string vsFilename, std::string fsFilename) {
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-
+    if(gsFilename.compare("") != 0) {
+        glDeleteShader(geometryShader);
+    }
 }
 
 Shader::~Shader() {
