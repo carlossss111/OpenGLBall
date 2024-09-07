@@ -48,10 +48,11 @@ set(SHADERS
 # Debug Settings
 if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 	add_compile_definitions(
+		DEBUG_GL # REQUIRED for most of the below options
+
 		DEBUG_CAMERA
 		#DEBUG_CAMERA_POSITION
 		#DEBUG_LINES
-		DEBUG_GL
 		DEBUG_PHYSX
 		#DEBUG_TILT
 		#DEBUG_FRAMERATE

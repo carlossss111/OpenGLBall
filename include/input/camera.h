@@ -43,7 +43,7 @@ public:
 	virtual float getYaw() const;
 	virtual std::string getName() const;
 
-#ifdef DEBUG_CAMERA
+#ifdef DEBUG_GL
 	virtual void getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio) const;
 #endif
 };

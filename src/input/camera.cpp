@@ -66,7 +66,7 @@ std::string Camera::getName() const {
 	return mName;
 }
 
-#ifdef DEBUG_CAMERA
+#ifdef DEBUG_GL
 void Camera::getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio) const {
 	float nearHeight = 2 * tan(mFov / 2) * mNearDistance;
 	float nearWidth = mNearDistance * aspectRatio;
