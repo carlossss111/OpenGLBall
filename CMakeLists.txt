@@ -39,6 +39,8 @@ set(SHADERS
 	shaders/phong.vert
 	shaders/depth.frag
 	shaders/depth.vert
+	shaders/depth_debug.vert
+	shaders/depth_debug.frag
 	shaders/line.frag
 	shaders/line.vert
 	shaders/skybox.vert
@@ -57,6 +59,7 @@ if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 		#DEBUG_TILT
 		#DEBUG_FRAMERATE
 		#DEBUG_SLOWMOTION
+		DEBUG_SHADOW
 	)
 endif()
 

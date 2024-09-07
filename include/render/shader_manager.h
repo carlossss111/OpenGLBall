@@ -7,6 +7,7 @@
 
 #define MAIN_SHADER "main"
 #define SHADOW_SHADER "shadow"
+#define DEPTH_DEBUG_SHADER "shadow_debug"
 #define LINE_SHADER "line"
 #define SKYBOX_SHADER "skybox"
 

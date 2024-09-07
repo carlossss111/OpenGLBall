@@ -5,11 +5,13 @@
 #define ASPECT_RATIO() static_cast<float>(Window::width) / static_cast<float>(Window::height)
 
 void Renderer::runDebugFunctions(glm::mat4 view, glm::mat4 projection){
+    glDisable(GL_CULL_FACE);
+
     Shader* mainShader = mShaderManager.get(MAIN_SHADER);
+    Shader* depthDebugShader = mShaderManager.get(DEPTH_DEBUG_SHADER);
     Shader* lineShader = mShaderManager.get(LINE_SHADER);
 
 // General Debug
-    glDisable(GL_CULL_FACE);
     lineShader->use();
     lineShader->setMat4("view", view);
     lineShader->setMat4("projection", projection);
@@ -20,8 +22,18 @@ void Renderer::runDebugFunctions(glm::mat4 view, glm::mat4 projection){
     renderCameraFrustum();
     mainShader->use();
     renderCameraBox();
-    glEnable((GL_CULL_FACE));
 #endif
+
+#ifdef DEBUG_SHADOW
+    depthDebugShader->use();
+    depthDebugShader->setFloat("nearPlane", 1.f);
+    depthDebugShader->setFloat("farPlane", 70.f);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mShadow.getDepthMap());
+    renderDepthMapAsCamera();
+#endif
+
+    glEnable(GL_CULL_FACE);
 }
 
 void Renderer::renderLine(glm::vec3 start, glm::vec3 end, glm::vec3 colour){
@@ -93,4 +105,37 @@ void Renderer::renderCameraFrustum(){
         renderLine(buff[3], buff[7]); // nearBR, farBR
     }
 }
+
+void Renderer::renderDepthMapAsCamera() {
+    static unsigned int quadVAO = 0;
+    static unsigned int quadVBO = 0;
+    
+    // Setup VAO/VBO of a quad to be placed on the top-left of the display
+    if (quadVAO == 0){
+        //  Positions       Texels
+        float verts[] = {
+            -1.0f, 1.0f,    0.0f, 1.0f,
+            -1.0f, 0.0f,    0.0f, 0.0f,
+             0.0f, 1.0f,    1.0f, 1.0f,
+             0.0f, 0.0f,    1.0f, 0.0f,
+        };
+
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(verts), &verts, GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    }
+
+    // Draw the quad
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+}
+
 #endif

@@ -49,5 +49,6 @@ private:
 	void renderAxis();
 	void renderCameraBox();
 	void renderCameraFrustum();
+	void renderDepthMapAsCamera();
 #endif
 };
