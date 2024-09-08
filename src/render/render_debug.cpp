@@ -27,7 +27,7 @@ void Renderer::runDebugFunctions(glm::mat4 view, glm::mat4 projection){
 #ifdef DEBUG_SHADOW
     depthDebugShader->use();
     depthDebugShader->setFloat("nearPlane", 1.f);
-    depthDebugShader->setFloat("farPlane", 70.f);
+    depthDebugShader->setFloat("farPlane", 100.f);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mShadow.getDepthMap());
     renderDepthMapAsCamera();
@@ -87,7 +87,7 @@ void Renderer::renderCameraFrustum(){
     for(int i = 0; i < mCameraManager.getNumOfCameras(); i++){
         Camera* camera = mCameraManager.getCamera(i);
         glm::vec3 buff[8];
-        camera->getPerspectiveVertices(buff, ASPECT_RATIO());
+        camera->getPerspectiveVertices(buff, ASPECT_RATIO(), 0.5f, 50.f);
         
         renderLine(buff[0], buff[1]); // nearTL, nearTR
         renderLine(buff[0], buff[2]); // nearTL, nearBL

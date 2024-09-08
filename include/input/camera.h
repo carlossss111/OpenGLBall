@@ -43,7 +43,8 @@ public:
 	virtual float getYaw() const;
 	virtual std::string getName() const;
 
-#ifdef DEBUG_GL
-	virtual void getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio) const;
-#endif
+	virtual void getPerspectiveVertices(glm::vec3 vertBuffer[8], const float aspectRatio,
+		float nearDistance, float farDistance) const;
+	virtual glm::mat4 calcProjectedLightSpace(glm::vec3 lightDir, float aspectRatio, 
+		float nearDistance = -1.f, float farDistance = -1.f) const;
 };

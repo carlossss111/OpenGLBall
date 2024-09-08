@@ -58,6 +58,9 @@ void Renderer::renderScene(const Scene& sceneRef) {
     Shader* shadowShader = mShaderManager.get(SHADOW_SHADER);
     Shader* skyboxShader = mShaderManager.get(SKYBOX_SHADER);
 
+    // Get camera
+    Camera* camera = mCameraManager.getCurrentCamera();
+
     // Set Lighting
     mainShader->use();
     mainShader->setLightUniforms(mLight);
@@ -65,7 +68,8 @@ void Renderer::renderScene(const Scene& sceneRef) {
     // Draw Depth Map
     shadowShader->use();
     glCullFace(GL_FRONT);
-    glm::mat4 projectedLightSpace = mShadow.calcProjectedLightSpace(mLight);
+    glm::mat4 projectedLightSpace 
+        = camera->calcProjectedLightSpace(mLight.direction, ASPECT_RATIO(), 0.5f, 50.f);
     mShadow.createDepthMap(sceneRef, projectedLightSpace, Window::width, Window::height);
     glCullFace(GL_BACK);
 
@@ -77,7 +81,6 @@ void Renderer::renderScene(const Scene& sceneRef) {
     glBindTexture(GL_TEXTURE_2D, mShadow.getDepthMap());
 
     // Main View and Perspective Matrices
-    Camera* camera = mCameraManager.getCurrentCamera();
     glm::mat4 view = camera->calculateView();
     glm::mat4 projection = camera->calculateProjection(ASPECT_RATIO());
     mainShader->setMat4("view", view);

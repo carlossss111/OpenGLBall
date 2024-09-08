@@ -20,6 +20,5 @@ private:
 public:
 	Shadow(Shader* shadowShader, int depthMapWidth, int depthMapHeight);
 	unsigned int getDepthMap();
-	glm::mat4 calcProjectedLightSpace(Light light);
 	void createDepthMap(const Scene& scene, glm::mat4 projectedLightSpace, int windowWidth, int windowHeight);
 };

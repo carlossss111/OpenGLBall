@@ -44,10 +44,3 @@ void Shadow::createDepthMap(const Scene& scene, glm::mat4 projectedLightSpace, i
 	glViewport(0, 0, windowWidth, windowHeight);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-
-glm::mat4 Shadow::calcProjectedLightSpace(Light light) {
-	const float nearPlane = 1.0f, farPlane = 70.f;
-	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-	glm::mat4 lightView = glm::lookAt(light.pos, light.pos + light.direction, glm::vec3(0.0, 1.0, 0.0));
-	return lightProjection * lightView;
-}
